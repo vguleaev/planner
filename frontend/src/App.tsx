@@ -7,7 +7,7 @@ function App() {
   const [count, setCount] = useState(0);
 
   const fetchExpenses = async () => {
-    const response = await fetch('http://localhost:3000/api/expenses');
+    const response = await fetch('/api/expenses');
     const data = await response.json();
     console.log(data);
   };
