@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
 import './App.css';
+import { Button } from '@/components/ui/button';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -18,13 +17,14 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col">
-        <button className="bg-green-100 mr-5" onClick={() => setCount((count) => count + 1)}>
-          count is {count} UP
-        </button>
-        <button className="bg-red-100" onClick={() => setCount((count) => count - 1)}>
-          count is {count} DOWN
-        </button>
+      <div className="flex flex-col bg-background gap-5">
+        <Button className="w-[100px] mr-5" onClick={() => setCount((count) => count + 1)}>
+          Up
+        </Button>
+        <Button className="w-[100px]" onClick={() => setCount((count) => count - 1)}>
+          Down
+        </Button>
+        <div className="text-muted-foreground">{count}</div>
       </div>
     </>
   );
