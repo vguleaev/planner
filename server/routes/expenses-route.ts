@@ -18,49 +18,45 @@ const fakeExpenses: Expense[] = [
   { id: 3, name: 'Gas', amount: 50 },
 ];
 
-const expensesRoute = new Hono();
+const expensesRoute = new Hono()
+  .post('/', zValidator('form', createExpenseSchema), async (c) => {
+    const data = await c.req.valid('form');
+    const expense = createExpenseSchema.parse(data);
 
-expensesRoute.post('/', zValidator('form', createExpenseSchema), async (c) => {
-  const data = await c.req.valid('form');
-  const expense = createExpenseSchema.parse(data);
+    fakeExpenses.push({ id: fakeExpenses.length + 1, ...expense });
 
-  fakeExpenses.push({ id: fakeExpenses.length + 1, ...expense });
+    return c.json(expense);
+  })
+  .get('/', (c) => {
+    return c.json(fakeExpenses);
+  })
+  .get('/:id', (c) => {
+    const id = parseInt(c.req.param('id'));
+    if (isNaN(id)) {
+      c.status(400);
+      return c.json({ message: 'Id must be a number' });
+    }
+    const expense = fakeExpenses.find((e) => e.id === id);
 
-  return c.json(expense);
-});
+    if (!expense) {
+      return c.notFound();
+    }
 
-expensesRoute.get('/', (c) => {
-  return c.json(fakeExpenses);
-});
+    return c.json(expense);
+  })
+  .delete('/:id', (c) => {
+    const id = parseInt(c.req.param('id'));
+    if (isNaN(id)) {
+      c.status(400);
+      return c.json({ message: 'Id must be a number' });
+    }
+    const index = fakeExpenses.findIndex((e) => e.id === id);
+    if (index === -1) {
+      return c.notFound();
+    }
 
-expensesRoute.get('/:id', (c) => {
-  const id = parseInt(c.req.param('id'));
-  if (isNaN(id)) {
-    c.status(400);
-    return c.json({ message: 'Id must be a number' });
-  }
-  const expense = fakeExpenses.find((e) => e.id === id);
-
-  if (!expense) {
-    return c.notFound();
-  }
-
-  return c.json(expense);
-});
-
-expensesRoute.delete('/:id', (c) => {
-  const id = parseInt(c.req.param('id'));
-  if (isNaN(id)) {
-    c.status(400);
-    return c.json({ message: 'Id must be a number' });
-  }
-  const index = fakeExpenses.findIndex((e) => e.id === id);
-  if (index === -1) {
-    return c.notFound();
-  }
-
-  const deleted = fakeExpenses.splice(index, 1)[0];
-  return c.json(deleted);
-});
+    const deleted = fakeExpenses.splice(index, 1)[0];
+    return c.json(deleted);
+  });
 
 export default expensesRoute;
