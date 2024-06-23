@@ -1,11 +1,15 @@
 import { useState } from 'react';
-import './App.css';
 import { Button } from '@/components/ui/button';
-import Logo from './assets/planner-logo.svg?react';
-import { api } from './lib/api';
+import Logo from '@/assets/planner-logo.svg?react';
+import { api } from '@/lib/api';
+import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
 
-function App() {
+export const Route = createFileRoute('/')({
+  component: Index,
+});
+
+function Index() {
   const [count, setCount] = useState(0);
 
   const fetchExpenses = async () => {
@@ -36,5 +40,3 @@ function App() {
     </>
   );
 }
-
-export default App;
