@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import './App.css';
 import { Button } from '@/components/ui/button';
 import Logo from './assets/planner-logo.svg?react';
 import { api } from './lib/api';
+import { useQuery } from '@tanstack/react-query';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -10,12 +11,14 @@ function App() {
   const fetchExpenses = async () => {
     const response = await api.expenses.$get();
     const data = await response.json();
-    console.log(data);
+    return data;
   };
 
-  useEffect(() => {
-    fetchExpenses();
-  }, []);
+  const { isPending, error, data } = useQuery({ queryKey: ['expenses'], queryFn: fetchExpenses });
+
+  if (isPending) return <div>Loading...</div>;
+
+  if (error) return <div>Error: {error.message}</div>;
 
   return (
     <>
@@ -28,6 +31,7 @@ function App() {
           Down
         </Button>
         <div className="text-muted-foreground">{count}</div>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
       </div>
     </>
   );
