@@ -6,9 +6,11 @@ export const Route = createRootRoute({
 
 function NavBar() {
   return (
-    <nav>
+    <nav className="flex gap-3">
       <Link to="/">Home</Link>
       <Link to="/about">About</Link>
+      <Link to="/expenses">Expenses</Link>
+      <Link to="/create-expense">Create Expense</Link>
     </nav>
   );
 }
