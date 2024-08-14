@@ -27,7 +27,8 @@ const expensesRoute = new Hono()
 
     return c.json(expense);
   })
-  .get('/', (c) => {
+  .get('/', async (c) => {
+    await new Promise((resolve) => setTimeout(resolve, 3000));
     return c.json(fakeExpenses);
   })
   .get('/:id', (c) => {
