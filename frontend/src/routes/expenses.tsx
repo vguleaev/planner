@@ -25,10 +25,6 @@ function ExpensesPage() {
 
   const { isPending, error, data } = useQuery({ queryKey: ['expenses'], queryFn: fetchExpenses });
 
-  // if (isPending) return <div>Loading...</div>;
-
-  // if (error) return <div>Error: {error.message}</div>;
-
   return (
     <div className="p-2 max-w-3xl m-auto">
       {error && <div>Error: {error.message}</div>}

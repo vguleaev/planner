@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "start": "bun server/index.ts",
-    "dev": "bun --watch server/index.ts"
+    "dev": "bun --watch server/index.ts",
+    "check-updates": "bun x npm-check-updates --interactive --format group"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -13,8 +14,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "@hono/zod-validator": "^0.2.1",
-    "hono": "^4.3.2",
+    "@hono/zod-validator": "^0.2.2",
+    "hono": "^4.5.5",
     "zod": "^3.23.8"
   }
 }

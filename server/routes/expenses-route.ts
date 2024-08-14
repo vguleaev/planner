@@ -19,8 +19,8 @@ const fakeExpenses: Expense[] = [
 ];
 
 const expensesRoute = new Hono()
-  .post('/', zValidator('form', createExpenseSchema), async (c) => {
-    const data = await c.req.valid('form');
+  .post('/', zValidator('json', createExpenseSchema), async (c) => {
+    const data = await c.req.valid('json');
     const expense = createExpenseSchema.parse(data);
 
     fakeExpenses.push({ id: fakeExpenses.length + 1, ...expense });
@@ -28,7 +28,6 @@ const expensesRoute = new Hono()
     return c.json(expense);
   })
   .get('/', async (c) => {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
     return c.json(fakeExpenses);
   })
   .get('/:id', (c) => {
