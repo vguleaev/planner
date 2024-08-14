@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import Logo from '@/assets/planner-logo.svg?react';
+import Logo from '@/assets/app-logo.svg?react';
 import { api } from '@/lib/api';
 import { createFileRoute } from '@tanstack/react-router';
 import { useQuery } from '@tanstack/react-query';
