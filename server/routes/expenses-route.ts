@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const expenseSchema = z.object({
   id: z.number().int().positive(),
@@ -27,8 +28,10 @@ const expensesRoute = new Hono()
 
     return c.json(expense);
   })
-  .get('/', async (c) => {
-    return c.json(fakeExpenses);
+  .get('/', authMiddleware, async (ctx) => {
+    const user = ctx.get('user');
+    console.log('User:', user);
+    return ctx.json(fakeExpenses);
   })
   .get('/:id', (c) => {
     const id = parseInt(c.req.param('id'));

@@ -7,7 +7,7 @@ import type { FieldApi } from '@tanstack/react-form';
 import { LoaderCircle } from 'lucide-react';
 import { api } from '@/lib/api';
 
-export const Route = createFileRoute('/create-expense')({
+export const Route = createFileRoute('/_authenticated/create-expense')({
   component: CreateExpensePage,
 });
 
@@ -33,7 +33,7 @@ function CreateExpensePage() {
     onSubmit: async ({ value }) => {
       const res = await api.expenses.$post({ json: value });
       if (!res.ok) {
-        console.error(res.text);
+        console.error('Error creating expense:', res.statusText);
         return;
       }
       navigate({ to: '/expenses' });

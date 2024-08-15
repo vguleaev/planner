@@ -11,6 +11,7 @@ function NavBar() {
       <Link to="/about">About</Link>
       <Link to="/expenses">Expenses</Link>
       <Link to="/create-expense">Create Expense</Link>
+      <Link to="/profile">Profile</Link>
     </nav>
   );
 }
