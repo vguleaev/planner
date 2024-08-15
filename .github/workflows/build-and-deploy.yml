@@ -41,4 +41,4 @@ jobs:
             docker pull docker.io/${{ env.DOCKER_USER }}/${{ env.APP_NAME }}:${{ github.sha }}
             docker stop ${{ env.APP_NAME }} || true
             docker rm ${{ env.APP_NAME }} || true
-            docker run --init -d -p 3000:3000 --name ${{ env.APP_NAME }} docker.io/${{ env.DOCKER_USER }}/${{ env.APP_NAME }}:${{ github.sha }}
+            docker run --init --restart unless-stopped -d -p 3000:3000 --name ${{ env.APP_NAME }} docker.io/${{ env.DOCKER_USER }}/${{ env.APP_NAME }}:${{ github.sha }}
