@@ -21,11 +21,12 @@ const Component = () => {
 export const Route = createFileRoute('/_authenticated')({
   beforeLoad: async () => {
     const response = await api.me.$get();
-    const user = await response.json();
-    if (user) {
-      return { user };
+    if (response.status === 401) {
+      return { user: null };
     }
-    return { user: null };
+
+    const user = await response.json();
+    return { user };
   },
   component: Component,
 });

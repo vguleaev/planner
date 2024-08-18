@@ -24,13 +24,8 @@ const authRoute = new Hono()
     const logoutUrl = await kindeClient.logout(sessionManager);
     return ctx.redirect(logoutUrl.toString());
   })
-  .get('/me', async (ctx) => {
-    const sessionManager = getSessionManager(ctx);
-    const isAuthenticated = await kindeClient.isAuthenticated(sessionManager);
-    if (!isAuthenticated) {
-      return ctx.json(null);
-    }
-    const user = await kindeClient.getUserProfile(sessionManager);
+  .get('/me', authMiddleware, async (ctx) => {
+    const user = ctx.get('user');
     return ctx.json(user);
   });
 
