@@ -27,7 +27,7 @@ function CreateExpensePage() {
   const navigate = useNavigate();
   const form = useForm({
     defaultValues: {
-      name: '',
+      title: '',
       amount: 0,
     },
     onSubmit: async ({ value }) => {
@@ -50,10 +50,10 @@ function CreateExpensePage() {
         }}
         className="pt-2">
         <form.Field
-          name="name"
+          name="title"
           children={(field) => (
             <>
-              <Label htmlFor={field.name}>Name</Label>
+              <Label htmlFor={field.name}>Title</Label>
               <Input
                 className="my-2"
                 type="text"

@@ -41,3 +41,18 @@ docker run --init -p 3000:3000 planner-app
 ```
 
 _(--init is needed to handle Ctrl +C SIGINT signals properly)_
+
+# Drizzle ORM
+
+Migrations:
+
+Whenever you apply changes to the schema you just rerun `drizzle-kit generate` and it will generate SQL migration for you completely automatically in most of the cases.
+
+Run migration generation from schema:
+`bunx drizzle-kit generate`
+
+Run migrations:
+`bunx drizzle-kit migrate`
+
+Launch drizzle studio:
+`bunx drizzle-kit studio`

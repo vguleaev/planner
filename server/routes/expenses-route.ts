@@ -2,10 +2,13 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
+import { db } from '../db/db';
+import { expensesTable } from '../db/schema';
+import { eq } from 'drizzle-orm';
 
 const expenseSchema = z.object({
   id: z.number().int().positive(),
-  name: z.string().min(3),
+  title: z.string().min(3),
   amount: z.number().positive(),
 });
 
@@ -14,37 +17,40 @@ export type Expense = z.infer<typeof expenseSchema>;
 const createExpenseSchema = expenseSchema.omit({ id: true });
 
 const fakeExpenses: Expense[] = [
-  { id: 1, name: 'Rent', amount: 1000 },
-  { id: 2, name: 'Food', amount: 200 },
-  { id: 3, name: 'Gas', amount: 50 },
+  { id: 1, title: 'Rent', amount: 1000 },
+  { id: 2, title: 'Food', amount: 200 },
+  { id: 3, title: 'Gas', amount: 50 },
 ];
 
 const expensesRoute = new Hono()
-  .post('/', zValidator('json', createExpenseSchema), async (c) => {
+  .post('/', zValidator('json', createExpenseSchema), authMiddleware, async (c) => {
+    const user = c.get('user');
     const data = await c.req.valid('json');
     const expense = createExpenseSchema.parse(data);
 
-    fakeExpenses.push({ id: fakeExpenses.length + 1, ...expense });
+    const newExpense = {
+      title: expense.title,
+      amount: expense.amount.toFixed(2),
+      userId: user.id,
+    };
 
-    return c.json(expense);
+    const inserted = await db.insert(expensesTable).values(newExpense).returning();
+    return c.json(inserted);
   })
   .get('/', authMiddleware, async (ctx) => {
     const user = ctx.get('user');
-    console.log('User:', user);
-    return ctx.json(fakeExpenses);
+    const expenses = await db.select().from(expensesTable).where(eq(expensesTable.userId, user.id));
+    return ctx.json(expenses);
   })
-  .get('/:id', (c) => {
+  .get('/:id', async (c) => {
     const id = parseInt(c.req.param('id'));
     if (isNaN(id)) {
-      c.status(400);
-      return c.json({ message: 'Id must be a number' });
+      return c.json({ message: 'Id must be a number' }, 400);
     }
-    const expense = fakeExpenses.find((e) => e.id === id);
-
+    const expense = await db.select().from(expensesTable).where(eq(expensesTable.id, id)).limit(1);
     if (!expense) {
       return c.notFound();
     }
-
     return c.json(expense);
   })
   .delete('/:id', (c) => {
