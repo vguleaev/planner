@@ -46,6 +46,7 @@ jobs:
             docker rm ${{ env.APP_NAME }} || true
             docker run --init --restart unless-stopped -d -p ${{ env.PORT }}:${{ env.PORT }} --name ${{ env.APP_NAME }} \
               --network projects-network \
+              -e DATABASE_URL=${{ secrets.DATABASE_URL }} \
               -e KINDE_DOMAIN=${{ secrets.KINDE_DOMAIN }} \
               -e KINDE_CLIENT_ID=${{ secrets.KINDE_CLIENT_ID }} \
               -e KINDE_CLIENT_SECRET=${{ secrets.KINDE_CLIENT_SECRET }} \
