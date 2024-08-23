@@ -16,12 +16,6 @@ export type Expense = z.infer<typeof expenseSchema>;
 
 const createExpenseSchema = expenseSchema.omit({ id: true });
 
-const fakeExpenses: Expense[] = [
-  { id: 1, title: 'Rent', amount: 1000 },
-  { id: 2, title: 'Food', amount: 200 },
-  { id: 3, title: 'Gas', amount: 50 },
-];
-
 const expensesRoute = new Hono()
   .post('/', zValidator('json', createExpenseSchema), authMiddleware, async (c) => {
     const user = c.get('user');
@@ -59,12 +53,11 @@ const expensesRoute = new Hono()
       c.status(400);
       return c.json({ message: 'Id must be a number' });
     }
-    const index = fakeExpenses.findIndex((e) => e.id === id);
-    if (index === -1) {
+    const expense = db.select().from(expensesTable).where(eq(expensesTable.id, id)).limit(1);
+    if (!expense) {
       return c.notFound();
     }
-
-    const deleted = fakeExpenses.splice(index, 1)[0];
+    const deleted = db.delete(expensesTable).where(eq(expensesTable.id, id)).returning();
     return c.json(deleted);
   });
 
