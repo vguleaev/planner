@@ -6,6 +6,9 @@ import { useForm } from '@tanstack/react-form';
 import type { FieldApi } from '@tanstack/react-form';
 import { LoaderCircle } from 'lucide-react';
 import { api } from '@/lib/api';
+import { zodValidator } from '@tanstack/zod-form-adapter';
+import { z } from 'zod';
+import { createExpenseSchema } from '@server/validation/expenses.schema';
 
 export const Route = createFileRoute('/_authenticated/create-expense')({
   component: CreateExpensePage,
@@ -26,6 +29,7 @@ function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
 function CreateExpensePage() {
   const navigate = useNavigate();
   const form = useForm({
+    validatorAdapter: zodValidator(),
     defaultValues: {
       title: '',
       amount: 0,
@@ -44,15 +48,18 @@ function CreateExpensePage() {
     <div className="p-2 max-w-xl m-auto">
       <h2>Create Expense</h2>
       <form
+        className="flex flex-col pt-2"
         onSubmit={(e) => {
           e.preventDefault();
           form.handleSubmit();
-        }}
-        className="pt-2">
+        }}>
         <form.Field
           name="title"
+          validators={{
+            onSubmit: createExpenseSchema.shape.title,
+          }}
           children={(field) => (
-            <>
+            <div>
               <Label htmlFor={field.name}>Title</Label>
               <Input
                 className="my-2"
@@ -64,13 +71,16 @@ function CreateExpensePage() {
                 onChange={(e) => field.handleChange(e.target.value)}
               />
               <FieldInfo field={field} />
-            </>
+            </div>
           )}
         />
         <form.Field
           name="amount"
+          validators={{
+            onSubmit: createExpenseSchema.shape.amount,
+          }}
           children={(field) => (
-            <>
+            <div>
               <Label htmlFor={field.name}>Amount</Label>
               <Input
                 className="my-2"
@@ -82,13 +92,13 @@ function CreateExpensePage() {
                 onChange={(e) => field.handleChange(Number(e.target.value))}
               />
               <FieldInfo field={field} />
-            </>
+            </div>
           )}
         />
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
-            <Button className="mt-4" type="submit" disabled={!canSubmit}>
+            <Button className="mt-4 w-fit" type="submit" disabled={!canSubmit}>
               {isSubmitting && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
               Create Expense
             </Button>

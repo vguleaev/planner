@@ -1,20 +1,10 @@
 import { Hono } from 'hono';
-import { z } from 'zod';
 import { zValidator } from '@hono/zod-validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { db } from '../db/db';
 import { expensesTable } from '../db/schema';
 import { desc, eq, and } from 'drizzle-orm';
-
-const expenseSchema = z.object({
-  id: z.number().int().positive(),
-  title: z.string().min(3),
-  amount: z.number().positive(),
-});
-
-export type Expense = z.infer<typeof expenseSchema>;
-
-const createExpenseSchema = expenseSchema.omit({ id: true });
+import { createExpenseSchema } from '../validation/expenses.schema';
 
 const expensesRoute = new Hono()
   .post('/', zValidator('json', createExpenseSchema), authMiddleware, async (c) => {
