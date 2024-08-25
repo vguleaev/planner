@@ -4,7 +4,7 @@ import { zValidator } from '@hono/zod-validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { db } from '../db/db';
 import { expensesTable } from '../db/schema';
-import { eq } from 'drizzle-orm';
+import { desc, eq, and } from 'drizzle-orm';
 
 const expenseSchema = z.object({
   id: z.number().int().positive(),
@@ -33,27 +33,42 @@ const expensesRoute = new Hono()
   })
   .get('/', authMiddleware, async (ctx) => {
     const user = ctx.get('user');
-    const expenses = await db.select().from(expensesTable).where(eq(expensesTable.userId, user.id));
+    const expenses = await db
+      .select()
+      .from(expensesTable)
+      .where(eq(expensesTable.userId, user.id))
+      .orderBy(desc(expensesTable.createdAt));
+
     return ctx.json(expenses);
   })
-  .get('/:id', async (c) => {
+  .get('/:id', authMiddleware, async (c) => {
+    const user = c.get('user');
     const id = parseInt(c.req.param('id'));
     if (isNaN(id)) {
       return c.json({ message: 'Id must be a number' }, 400);
     }
-    const expense = await db.select().from(expensesTable).where(eq(expensesTable.id, id)).limit(1);
+    const expense = await db
+      .select()
+      .from(expensesTable)
+      .where(and(eq(expensesTable.id, id), eq(expensesTable.userId, user.id)))
+      .limit(1);
     if (!expense) {
       return c.notFound();
     }
     return c.json(expense);
   })
-  .delete('/:id', (c) => {
+  .delete('/:id', authMiddleware, (c) => {
+    const user = c.get('user');
     const id = parseInt(c.req.param('id'));
     if (isNaN(id)) {
       c.status(400);
       return c.json({ message: 'Id must be a number' });
     }
-    const expense = db.select().from(expensesTable).where(eq(expensesTable.id, id)).limit(1);
+    const expense = db
+      .select()
+      .from(expensesTable)
+      .where(and(eq(expensesTable.id, id), eq(expensesTable.userId, user.id)))
+      .limit(1);
     if (!expense) {
       return c.notFound();
     }
