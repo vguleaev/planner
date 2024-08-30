@@ -27,6 +27,7 @@ function ExpensesPage() {
             <TableHead className="w-[100px]">Id</TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Amount</TableHead>
+            <TableHead>Date</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -50,6 +51,7 @@ function ExpensesPage() {
                   <TableCell>{expense.id}</TableCell>
                   <TableCell className="font-medium">{expense.title}</TableCell>
                   <TableCell>{expense.amount} $</TableCell>
+                  <TableCell>{expense.date}</TableCell>
                 </TableRow>
               ))}
         </TableBody>

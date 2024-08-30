@@ -15,6 +15,7 @@ const expensesRoute = new Hono()
     const newExpense = {
       title: expense.title,
       amount: expense.amount.toFixed(2),
+      date: expense.date,
       userId: user.id,
     };
 

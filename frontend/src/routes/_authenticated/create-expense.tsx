@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Calendar } from '@/components/ui/calendar';
 import { Label } from '@radix-ui/react-label';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
@@ -7,7 +8,7 @@ import type { FieldApi } from '@tanstack/react-form';
 import { LoaderCircle } from 'lucide-react';
 import { api } from '@/lib/api';
 import { zodValidator } from '@tanstack/zod-form-adapter';
-import { z } from 'zod';
+
 import { createExpenseSchema } from '@server/validation/expenses.schema';
 
 export const Route = createFileRoute('/_authenticated/create-expense')({
@@ -28,11 +29,13 @@ function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
 
 function CreateExpensePage() {
   const navigate = useNavigate();
+
   const form = useForm({
     validatorAdapter: zodValidator(),
     defaultValues: {
       title: '',
       amount: 0,
+      date: new Date().toISOString(),
     },
     onSubmit: async ({ value }) => {
       const res = await api.expenses.$post({ json: value });
@@ -48,7 +51,7 @@ function CreateExpensePage() {
     <div className="p-2 max-w-xl m-auto">
       <h2>Create Expense</h2>
       <form
-        className="flex flex-col pt-2"
+        className="flex flex-col pt-2 gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           form.handleSubmit();
@@ -95,6 +98,27 @@ function CreateExpensePage() {
             </div>
           )}
         />
+        <div className="w-full flex flex-row justify-center items-center">
+          <form.Field
+            name="date"
+            validators={{
+              onSubmit: createExpenseSchema.shape.date,
+            }}
+            children={(field) => (
+              <div>
+                <Calendar
+                  mode="single"
+                  id={field.name}
+                  selected={new Date(field.state.value)}
+                  onDayBlur={field.handleBlur}
+                  onSelect={(date) => field.handleChange((date ?? new Date()).toISOString())}
+                  className="rounded-md border"
+                />
+                <FieldInfo field={field} />
+              </div>
+            )}
+          />
+        </div>
         <form.Subscribe
           selector={(state) => [state.canSubmit, state.isSubmitting]}
           children={([canSubmit, isSubmitting]) => (
