@@ -10,6 +10,7 @@ import { api } from '@/lib/api';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 
 import { createExpenseSchema } from '@server/validation/expenses.schema';
+import { useToast } from '@/hooks/use-toast';
 
 export const Route = createFileRoute('/_authenticated/create-expense')({
   component: CreateExpensePage,
@@ -29,6 +30,7 @@ function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
 
 function CreateExpensePage() {
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const form = useForm({
     validatorAdapter: zodValidator(),
@@ -43,6 +45,10 @@ function CreateExpensePage() {
         console.error('Error creating expense:', res.statusText);
         return;
       }
+      toast({
+        title: 'Success!',
+        description: 'You have successfully created a new expense.',
+      });
       navigate({ to: '/expenses' });
     },
   });

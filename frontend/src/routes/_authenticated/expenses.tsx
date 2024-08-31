@@ -1,21 +1,14 @@
-import { api } from '@/lib/api';
-import { useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useExpenses } from '@/hooks/expenses.hooks';
 
 export const Route = createFileRoute('/_authenticated/expenses')({
   component: ExpensesPage,
 });
 
 function ExpensesPage() {
-  const fetchExpenses = async () => {
-    const response = await api.expenses.$get();
-    const data = await response.json();
-    return data;
-  };
-
-  const { isPending, error, data } = useQuery({ queryKey: ['expenses'], queryFn: fetchExpenses });
+  const { isPending, error, data } = useExpenses();
 
   return (
     <div className="p-2 max-w-3xl m-auto">
