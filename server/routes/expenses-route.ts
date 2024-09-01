@@ -5,6 +5,7 @@ import { db } from '../db/db';
 import { expensesTable } from '../db/schema';
 import { desc, eq, and } from 'drizzle-orm';
 import { createExpenseSchema } from '../validation/expenses.schema';
+import { sleep } from 'bun';
 
 const expensesRoute = new Hono()
   .post('/', zValidator('json', createExpenseSchema), authMiddleware, async (c) => {
@@ -48,7 +49,7 @@ const expensesRoute = new Hono()
     }
     return c.json(expense);
   })
-  .delete('/:id', authMiddleware, (c) => {
+  .delete('/:id', authMiddleware, async (c) => {
     const user = c.get('user');
     const id = parseInt(c.req.param('id'));
     if (isNaN(id)) {
@@ -63,7 +64,7 @@ const expensesRoute = new Hono()
     if (!expense) {
       return c.notFound();
     }
-    const deleted = db.delete(expensesTable).where(eq(expensesTable.id, id)).returning();
+    const deleted = await db.delete(expensesTable).where(eq(expensesTable.id, id)).returning();
     return c.json(deleted);
   });
 

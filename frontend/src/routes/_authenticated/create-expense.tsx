@@ -11,6 +11,7 @@ import { zodValidator } from '@tanstack/zod-form-adapter';
 
 import { createExpenseSchema } from '@server/validation/expenses.schema';
 import { useToast } from '@/hooks/use-toast';
+import { useCreateExpense } from '@/hooks/expenses.hooks';
 
 export const Route = createFileRoute('/_authenticated/create-expense')({
   component: CreateExpensePage,
@@ -30,7 +31,7 @@ function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
 
 function CreateExpensePage() {
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { mutateAsync } = useCreateExpense();
 
   const form = useForm({
     validatorAdapter: zodValidator(),
@@ -40,15 +41,7 @@ function CreateExpensePage() {
       date: new Date().toISOString(),
     },
     onSubmit: async ({ value }) => {
-      const res = await api.expenses.$post({ json: value });
-      if (!res.ok) {
-        console.error('Error creating expense:', res.statusText);
-        return;
-      }
-      toast({
-        title: 'Success!',
-        description: 'You have successfully created a new expense.',
-      });
+      await mutateAsync({ newExpense: value });
       navigate({ to: '/expenses' });
     },
   });

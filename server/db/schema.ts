@@ -1,3 +1,4 @@
+import type { InferSelectModel } from 'drizzle-orm';
 import { index, serial, numeric, pgTable, text, timestamp, date } from 'drizzle-orm/pg-core';
 
 export const expensesTable = pgTable(
@@ -16,3 +17,5 @@ export const expensesTable = pgTable(
     };
   }
 );
+
+export type Expense = InferSelectModel<typeof expensesTable>;

@@ -7,3 +7,5 @@ export const createExpenseSchema = z.object({
     message: 'Date must be a valid ISO date',
   }),
 });
+
+export type CreateExpense = z.infer<typeof createExpenseSchema>;
