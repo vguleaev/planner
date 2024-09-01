@@ -6,11 +6,9 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
 import type { FieldApi } from '@tanstack/react-form';
 import { LoaderCircle } from 'lucide-react';
-import { api } from '@/lib/api';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 
 import { createExpenseSchema } from '@server/validation/expenses.schema';
-import { useToast } from '@/hooks/use-toast';
 import { useCreateExpense } from '@/hooks/expenses.hooks';
 
 export const Route = createFileRoute('/_authenticated/create-expense')({

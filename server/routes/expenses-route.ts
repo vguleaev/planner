@@ -5,7 +5,6 @@ import { db } from '../db/db';
 import { expensesTable } from '../db/schema';
 import { desc, eq, and } from 'drizzle-orm';
 import { createExpenseSchema } from '../validation/expenses.schema';
-import { sleep } from 'bun';
 
 const expensesRoute = new Hono()
   .post('/', zValidator('json', createExpenseSchema), authMiddleware, async (c) => {
