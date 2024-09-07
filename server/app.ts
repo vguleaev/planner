@@ -4,6 +4,8 @@ import { serveStatic } from 'hono/bun';
 import expensesRoute from './routes/expenses-route';
 import authRoute from './routes/auth-route';
 import backlogTasksRoute from './routes/backlog-tasks-route';
+import backlogRoute from './routes/backlog.route';
+import backlogTaskGroupsRoute from './routes/backlog-task-groups-route';
 
 const app = new Hono();
 
@@ -12,7 +14,9 @@ app.use('*', logger());
 export const apiRoutes = app
   .basePath('/api')
   .route('/expenses', expensesRoute)
+  .route('/backlog', backlogRoute)
   .route('/backlog-tasks', backlogTasksRoute)
+  .route('/backlog-task-groups', backlogTaskGroupsRoute)
   .route('/', authRoute);
 
 app.get('*', serveStatic({ root: './frontend/dist' }));

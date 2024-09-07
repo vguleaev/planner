@@ -28,7 +28,11 @@ const backlogTasksRoute = new Hono()
       .where(eq(backlogTasksTable.userId, user.id))
       .orderBy(desc(backlogTasksTable.createdAt));
 
-    return ctx.json(tasks);
+    return ctx.json([
+      { name: 'Default', tasks },
+      { name: 'Work', tasks },
+      { name: 'Personal', tasks },
+    ]);
   })
   .get('/:id', authMiddleware, async (c) => {
     const user = c.get('user');

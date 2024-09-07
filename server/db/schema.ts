@@ -41,6 +41,9 @@ export const backlogTasksTable = pgTable(
     title: text('title').notNull(),
     description: text('description'),
     status: statusEnum('status').notNull().default('NOT_COMPLETED'),
+    groupId: uuid('group_id')
+      .notNull()
+      .references(() => backlogTaskGroupTable.id),
     priority: priorityEnum('priority').notNull().default('MEDIUM'),
     dueDate: date('due_date'),
     createdAt: timestamp('created_at').notNull().defaultNow(),
@@ -48,8 +51,26 @@ export const backlogTasksTable = pgTable(
   (table) => {
     return {
       userIndex: index('backlog_task_userId_idx').on(table.userId),
+      groupIndex: index('backlog_task_groupId_idx').on(table.groupId),
     };
   }
 );
 
 export type BacklogTask = InferSelectModel<typeof backlogTasksTable>;
+
+export const backlogTaskGroupTable = pgTable(
+  'backlog_task_groups',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: text('user_id').notNull(),
+    name: text('name').notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (table) => {
+    return {
+      userIndex: index('backlog_task_group_userId_idx').on(table.userId),
+    };
+  }
+);
+
+export type BacklogTaskGroup = InferSelectModel<typeof backlogTaskGroupTable>;

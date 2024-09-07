@@ -1,0 +1,1 @@
+ALTER TABLE "backlog_tasks" ALTER COLUMN "group_id" SET DATA TYPE uuid;
