@@ -15,6 +15,13 @@
       "when": 1725059154011,
       "tag": "0001_bumpy_bishop",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1725719400423,
+      "tag": "0002_purple_silverclaw",
+      "breakpoints": true
     }
   ]
 }
