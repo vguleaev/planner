@@ -29,6 +29,20 @@
       "when": 1725721108547,
       "tag": "0003_magenta_maggott",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1725724912428,
+      "tag": "0004_green_champions",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1725724933117,
+      "tag": "0005_vengeful_wild_child",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,5 @@
+export const BACKLOG_TASK_STATUS = {
+  COMPLETED: 'COMPLETED',
+  NOT_COMPLETED: 'NOT_COMPLETED',
+  WONT_DO: 'WONT_DO',
+} as const;

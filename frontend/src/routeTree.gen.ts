@@ -17,6 +17,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedExpensesImport } from './routes/_authenticated/expenses'
 import { Route as AuthenticatedCreateExpenseImport } from './routes/_authenticated/create-expense'
+import { Route as AuthenticatedBacklogImport } from './routes/_authenticated/backlog'
 
 // Create/Update Routes
 
@@ -52,6 +53,11 @@ const AuthenticatedCreateExpenseRoute = AuthenticatedCreateExpenseImport.update(
   } as any,
 )
 
+const AuthenticatedBacklogRoute = AuthenticatedBacklogImport.update({
+  path: '/backlog',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -76,6 +82,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/about'
       preLoaderRoute: typeof AboutImport
       parentRoute: typeof rootRoute
+    }
+    '/_authenticated/backlog': {
+      id: '/_authenticated/backlog'
+      path: '/backlog'
+      fullPath: '/backlog'
+      preLoaderRoute: typeof AuthenticatedBacklogImport
+      parentRoute: typeof AuthenticatedImport
     }
     '/_authenticated/create-expense': {
       id: '/_authenticated/create-expense'
@@ -106,6 +119,7 @@ declare module '@tanstack/react-router' {
 export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AuthenticatedRoute: AuthenticatedRoute.addChildren({
+    AuthenticatedBacklogRoute,
     AuthenticatedCreateExpenseRoute,
     AuthenticatedExpensesRoute,
     AuthenticatedProfileRoute,
@@ -132,6 +146,7 @@ export const routeTree = rootRoute.addChildren({
     "/_authenticated": {
       "filePath": "_authenticated.tsx",
       "children": [
+        "/_authenticated/backlog",
         "/_authenticated/create-expense",
         "/_authenticated/expenses",
         "/_authenticated/profile"
@@ -139,6 +154,10 @@ export const routeTree = rootRoute.addChildren({
     },
     "/about": {
       "filePath": "about.tsx"
+    },
+    "/_authenticated/backlog": {
+      "filePath": "_authenticated/backlog.tsx",
+      "parent": "/_authenticated"
     },
     "/_authenticated/create-expense": {
       "filePath": "_authenticated/create-expense.tsx",

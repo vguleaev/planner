@@ -1,0 +1,1 @@
+DROP TABLE "backlog_tasks";
