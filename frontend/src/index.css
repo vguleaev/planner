@@ -64,6 +64,7 @@
     @apply border-border;
   }
   body {
+    @apply min-h-screen min-w-full;
     @apply bg-background text-foreground;
   }
 }
