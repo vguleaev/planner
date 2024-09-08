@@ -1,4 +1,4 @@
-import { CircleUser, Menu, Search } from 'lucide-react';
+import { CircleUser, Menu } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
 import { Button } from '@/components/ui/button';
@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Logo from '@/assets/app-logo.svg?react';
-import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useCurrentUser } from '@/hooks/user.hooks';
 import { ThemeToggle } from './theme-toggle';
@@ -29,11 +28,11 @@ export function Navbar() {
         <Link to="/backlog" className="text-muted-foreground transition-colors hover:text-foreground">
           Backlog
         </Link>
-        <Link to="/about" className="text-muted-foreground transition-colors hover:text-foreground">
-          About
-        </Link>
         <Link to="/profile" className="text-muted-foreground transition-colors hover:text-foreground">
           Profile
+        </Link>
+        <Link to="/about" className="text-muted-foreground transition-colors hover:text-foreground">
+          About
         </Link>
       </nav>
       <Sheet>
@@ -52,27 +51,17 @@ export function Navbar() {
             <Link to="/backlog" className="text-muted-foreground hover:text-foreground">
               Backlog
             </Link>
-            <Link to="/about" className="text-muted-foreground hover:text-foreground">
-              About
-            </Link>
             <Link to="/profile" className="text-muted-foreground hover:text-foreground">
               Profile
+            </Link>
+            <Link to="/about" className="text-muted-foreground hover:text-foreground">
+              About
             </Link>
           </nav>
         </SheetContent>
       </Sheet>
       <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-        <form className="ml-auto flex-1 sm:flex-initial">
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search products..."
-              className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-            />
-          </div>
-        </form>
-        <div>
+        <div className="ml-auto flex-1 sm:flex-initial">
           <ThemeToggle />
         </div>
         <DropdownMenu>

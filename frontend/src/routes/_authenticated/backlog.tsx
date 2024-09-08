@@ -4,31 +4,52 @@ import { useBacklog } from '@/hooks/backlog-tasks.hooks';
 import { TaskModal } from '@/components/task-modal';
 import { Backlog } from '@/components/backlog';
 import { useTaskModalStore } from '@/stores/task-modal.store';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BACKLOG_TASK_FILTER } from '@server/constants/backlog-task-filter.const';
+import { ValueOf } from 'ts-essentials';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/_authenticated/backlog')({
   component: BacklogPage,
 });
 
 function BacklogPage() {
+  const [selectedFilter, setSelectedFilter] = useState<ValueOf<typeof BACKLOG_TASK_FILTER>>(
+    BACKLOG_TASK_FILTER.NOT_COMPLETED
+  );
   const { isPending, data: backlog } = useBacklog();
 
   const { setIsTaskModalOpen } = useTaskModalStore((state) => ({
     setIsTaskModalOpen: state.setIsOpen,
   }));
 
-  const renderAddTaskButton = () => {
+  const renderToolbar = () => {
     if (isPending || (backlog && backlog.groups.length === 0)) {
       return null;
     }
-    return <Button onClick={() => setIsTaskModalOpen(true)}>Create Task</Button>;
+    return (
+      <div className="flex flex-col md:flex-row gap-6">
+        <Tabs
+          value={selectedFilter}
+          onValueChange={(value) => setSelectedFilter(value as ValueOf<typeof BACKLOG_TASK_FILTER>)}
+          className="">
+          <TabsList>
+            <TabsTrigger value={BACKLOG_TASK_FILTER.NOT_COMPLETED}>Not completed</TabsTrigger>
+            <TabsTrigger value={BACKLOG_TASK_FILTER.COMPLETED}>Completed</TabsTrigger>
+            <TabsTrigger value={BACKLOG_TASK_FILTER.ALL}>All</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        <Button onClick={() => setIsTaskModalOpen(true)}>Create Task</Button>
+      </div>
+    );
   };
 
   return (
-    <div className="p-2 m-auto">
+    <div className="pt-2 m-auto">
       <div className="container mx-auto p-4">
-        <div className="flex flex-row justify-between pb-4">
+        <div className="flex flex-col md:flex-row justify-between pb-4">
           <h1 className="text-2xl font-bold mb-4">Backlog</h1>
-          {renderAddTaskButton()}
+          {renderToolbar()}
         </div>
         <Backlog />
         <TaskModal />

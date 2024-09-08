@@ -1,0 +1,5 @@
+export const BACKLOG_TASK_FILTER = {
+  COMPLETED: 'COMPLETED',
+  NOT_COMPLETED: 'NOT_COMPLETED',
+  ALL: 'ALL',
+} as const;

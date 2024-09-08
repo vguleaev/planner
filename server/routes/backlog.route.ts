@@ -21,6 +21,9 @@ const priorityMap = {
 
 const backlogRoute = new Hono().get('/', authMiddleware, async (ctx) => {
   const user = ctx.get('user');
+  const filter = ctx.req.query('filter');
+
+  console.log('filter', filter);
 
   const groups = await db
     .select()

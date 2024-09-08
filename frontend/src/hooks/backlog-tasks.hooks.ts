@@ -6,14 +6,18 @@ import { CreateBacklogTaskGroup, UpdateBacklogTaskGroup } from '@server/validati
 import { CreateBacklogTask } from '@server/validation/backlog-tasks.schema';
 
 const fetchBacklog = async () => {
-  const response = await api['backlog'].$get();
+  const response = await api['backlog'].$get({
+    query: {
+      filter: 'all',
+    },
+  });
   return response.json();
 };
 
 export const useBacklog = () => {
   return useQuery({
     queryKey: ['backlog'],
-    queryFn: fetchBacklog,
+    queryFn: () => fetchBacklog(),
     staleTime: 1000 * 60 * 5,
   });
 };
