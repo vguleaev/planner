@@ -3,7 +3,7 @@ import queryClient from '@/query-client/query-client';
 import { CreateExpense } from '@server/validation/expenses.schema';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useToast } from './use-toast';
-import { CreateBacklogTaskGroup } from '@server/validation/backlog-task-groups.schema';
+import { CreateBacklogTaskGroup, UpdateBacklogTaskGroup } from '@server/validation/backlog-task-groups.schema';
 
 const fetchExpenses = async () => {
   const response = await api.expenses.$get();
@@ -31,6 +31,25 @@ export const useBacklog = () => {
   });
 };
 
+const deleteGroup = async ({ id }: { id: string }) => {
+  return api['backlog-task-groups'][':id'].$delete({ param: { id } });
+};
+
+export const useDeleteGroup = () => {
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteGroup,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
+      toast({
+        title: 'Success!',
+        description: 'You have successfully deleted a group.',
+      });
+    },
+  });
+};
+
 const createGroup = async ({ newGroup }: { newGroup: CreateBacklogTaskGroup }) => {
   const res = await api['backlog-task-groups'].$post({ json: newGroup });
   return res.json();
@@ -46,6 +65,26 @@ export const useCreateGroup = () => {
       toast({
         title: 'Success!',
         description: 'You have successfully created a new group.',
+      });
+    },
+  });
+};
+
+const updateGroup = async ({ id, updatedGroup }: { id: string; updatedGroup: UpdateBacklogTaskGroup }) => {
+  const res = await api['backlog-task-groups'][':id'].$put({ param: { id }, json: updatedGroup });
+  return res.json();
+};
+
+export const useUpdateGroup = () => {
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: updateGroup,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
+      toast({
+        title: 'Success!',
+        description: 'You have successfully updated a group.',
       });
     },
   });

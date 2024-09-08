@@ -1,39 +1,59 @@
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { LoaderCircle } from 'lucide-react';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { useForm } from '@tanstack/react-form';
 import { createBacklogTaskGroupSchema } from '@server/validation/backlog-task-groups.schema';
-import { useCreateGroup } from '@/hooks/expenses.hooks';
+import { useCreateGroup, useUpdateGroup } from '@/hooks/expenses.hooks';
+import { useGroupModalStore } from '@/stores/group-modal.store';
 
-export function GroupCreationModal({ children }: { children: React.ReactNode }) {
-  const [open, setOpen] = useState(false);
-  const { mutateAsync } = useCreateGroup();
+export function GroupModal() {
+  const { mutateAsync: createGroup } = useCreateGroup();
+  const { mutateAsync: updateGroup } = useUpdateGroup();
+
+  const { isOpen, setIsOpen, selectedGroup, setSelectedGroup } = useGroupModalStore((state) => ({
+    isOpen: state.isOpen,
+    setIsOpen: state.setIsOpen,
+    selectedGroup: state.selectedGroup,
+    setSelectedGroup: state.setSelectedGroup,
+  }));
 
   const form = useForm({
     validatorAdapter: zodValidator(),
     defaultValues: {
-      name: '',
+      name: selectedGroup?.name || '',
     },
     onSubmit: async ({ value }) => {
-      await mutateAsync({ newGroup: value });
-      setOpen(false);
+      if (!selectedGroup) {
+        await createGroup({ newGroup: value });
+      } else {
+        await updateGroup({ id: selectedGroup.id, updatedGroup: value });
+      }
+      clear();
+      setIsOpen(false);
     },
   });
 
-  const onOpenChange = (isOpen: boolean) => {
+  const clear = () => {
     form.reset();
-    setOpen(isOpen);
+    setSelectedGroup(null);
+  };
+
+  const onOpenChange = (open: boolean) => {
+    clear();
+    setIsOpen(open);
+  };
+
+  const getTitle = () => {
+    return selectedGroup ? 'Edit Group' : 'Create Group';
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>Create New Group</DialogTitle>
+          <DialogTitle>{getTitle()}</DialogTitle>
         </DialogHeader>
         <form
           className="grid gap-4 py-4"
@@ -63,7 +83,7 @@ export function GroupCreationModal({ children }: { children: React.ReactNode }) 
             )}
           />
           <div className="flex flex-row w-full justify-end gap-4">
-            <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
+            <Button type="button" variant="secondary" onClick={() => onOpenChange(false)}>
               Close
             </Button>
             <form.Subscribe

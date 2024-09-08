@@ -1,8 +1,16 @@
 import { Hono } from 'hono';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { db } from '../db/db';
-import { backlogTaskGroupTable, backlogTasksTable } from '../db/schema';
+import { backlogTaskGroupTable, backlogTasksTable, type BacklogTask, type BacklogTaskGroup } from '../db/schema';
 import { asc, desc, eq } from 'drizzle-orm';
+
+export type GetBacklogResponse = {
+  groups: BacklogTaskGroupWithTasks[];
+};
+
+export type BacklogTaskGroupWithTasks = BacklogTaskGroup & {
+  tasks: BacklogTask[];
+};
 
 const backlogRoute = new Hono().get('/', authMiddleware, async (ctx) => {
   const user = ctx.get('user');
@@ -25,7 +33,7 @@ const backlogRoute = new Hono().get('/', authMiddleware, async (ctx) => {
       tasks: tasks.filter((task) => task.groupId === group.id),
     };
   });
-  return ctx.json({
+  return ctx.json<GetBacklogResponse>({
     groups: groupsWithTasks,
   });
 });

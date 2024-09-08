@@ -1,4 +1,4 @@
 {
   "editor.formatOnSave": true,
-  "cSpell.words": ["dayjs", "Hono", "kinde", "postgresql", "sqlite", "tanstack"]
+  "cSpell.words": ["dayjs", "Hono", "kinde", "lucide", "postgresql", "sqlite", "tanstack"]
 }

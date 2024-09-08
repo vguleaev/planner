@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useDeleteExpense, useExpenses } from '@/hooks/expenses.hooks';
 import { Trash, LoaderCircle } from 'lucide-react';
 import { ConfirmDialog } from '@/components/confirm-dialog';
+import { useState } from 'react';
 
 export const Route = createFileRoute('/_authenticated/expenses')({
   component: ExpensesPage,
@@ -12,10 +13,12 @@ export const Route = createFileRoute('/_authenticated/expenses')({
 
 function ExpensesPage() {
   const { isPending, error, data } = useExpenses();
-  const { isPending: isDeleting, mutate } = useDeleteExpense();
+  const { isPending: isDeleting, mutateAsync } = useDeleteExpense();
 
-  const onDelete = (id: number) => {
-    mutate({ id });
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onDelete = async (id: number) => {
+    await mutateAsync({ id });
   };
 
   return (
@@ -61,11 +64,13 @@ function ExpensesPage() {
                   <TableCell>{expense.amount} $</TableCell>
                   <TableCell>{expense.date}</TableCell>
                   <TableCell>
-                    <ConfirmDialog onConfirm={() => onDelete(expense.id)}>
-                      <Button disabled={isDeleting} variant="outline" size="icon">
-                        {isDeleting ? <LoaderCircle className="w-4 h-4 animate-spin" /> : <Trash className="w-4 h-4" />}
-                      </Button>
-                    </ConfirmDialog>
+                    <Button disabled={isDeleting} variant="outline" size="icon" onClick={() => setIsOpen(true)}>
+                      {isDeleting ? <LoaderCircle className="w-4 h-4 animate-spin" /> : <Trash className="w-4 h-4" />}
+                    </Button>
+                    <ConfirmDialog
+                      open={isOpen}
+                      onOpenChange={(value) => setIsOpen(value)}
+                      onConfirm={() => onDelete(expense.id)}></ConfirmDialog>
                   </TableCell>
                 </TableRow>
               ))}
