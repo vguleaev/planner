@@ -7,6 +7,7 @@ import { useForm } from '@tanstack/react-form';
 import { createBacklogTaskGroupSchema } from '@server/validation/backlog-task-groups.schema';
 import { useCreateGroup, useUpdateGroup } from '@/hooks/backlog-tasks.hooks';
 import { useGroupModalStore } from '@/stores/group-modal.store';
+import { FormFieldError } from './form-field-error';
 
 export function GroupModal() {
   const { mutateAsync: createGroup } = useCreateGroup();
@@ -67,18 +68,21 @@ export function GroupModal() {
               onSubmit: createBacklogTaskGroupSchema.shape.name,
             }}
             children={(field) => (
-              <div className="grid grid-cols-4 items-center gap-4">
-                <label htmlFor={field.name} className="text-right">
-                  Name
-                </label>
-                <Input
-                  id={field.name}
-                  value={field.state.value}
-                  name={field.name}
-                  onBlur={field.handleBlur}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  className="col-span-3"
-                />
+              <div className="flex flex-col gap-6">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <label htmlFor={field.name} className="text-right">
+                    Name
+                  </label>
+                  <Input
+                    id={field.name}
+                    value={field.state.value}
+                    name={field.name}
+                    onBlur={field.handleBlur}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="col-span-3"
+                  />
+                </div>
+                <FormFieldError field={field} />
               </div>
             )}
           />

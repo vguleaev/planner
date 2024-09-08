@@ -15,18 +15,7 @@ import { createBacklogTaskSchema } from '@server/validation/backlog-tasks.schema
 import { BACKLOG_TASK_STATUS } from '@server/constants/backlog-task-status.const';
 import { BACKLOG_TASK_PRIORITY } from '@server/constants/backlog-task-priority.const';
 import { ValueOf } from 'ts-essentials';
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function FieldInfo({ field }: { field: any }) {
-  return (
-    <>
-      {field.state.meta.isTouched && field.state.meta.errors.length ? (
-        <em>{field.state.meta.errors.join(', ')}</em>
-      ) : null}
-      {field.state.meta.isValidating ? 'Validating...' : null}
-    </>
-  );
-}
+import { FormFieldError } from './form-field-error';
 
 export function TaskModal() {
   const { mutateAsync: createTask } = useCreateTask();
@@ -100,19 +89,21 @@ export function TaskModal() {
                 onSubmit: createBacklogTaskSchema.shape.title,
               }}
               children={(field) => (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor={field.name} className="text-right">
-                    Title
-                  </label>
-                  <Input
-                    id={field.name}
-                    value={field.state.value}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="col-span-3"
-                  />
-                  <FieldInfo field={field} />
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor={field.name} className="text-right">
+                      Title
+                    </label>
+                    <Input
+                      id={field.name}
+                      value={field.state.value}
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <FormFieldError field={field} />
                 </div>
               )}
             />
@@ -122,19 +113,21 @@ export function TaskModal() {
                 onSubmit: createBacklogTaskSchema.shape.description,
               }}
               children={(field) => (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor={field.name} className="text-right">
-                    Description
-                  </label>
-                  <Textarea
-                    id={field.name}
-                    value={field.state.value}
-                    name={field.name}
-                    onBlur={field.handleBlur}
-                    onChange={(e) => field.handleChange(e.target.value)}
-                    className="col-span-3"
-                  />
-                  <FieldInfo field={field} />
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor={field.name} className="text-right">
+                      Description
+                    </label>
+                    <Textarea
+                      id={field.name}
+                      value={field.state.value}
+                      name={field.name}
+                      onBlur={field.handleBlur}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="col-span-3"
+                    />
+                  </div>
+                  <FormFieldError field={field} />
                 </div>
               )}
             />
@@ -144,24 +137,26 @@ export function TaskModal() {
                 onSubmit: createBacklogTaskSchema.shape.status,
               }}
               children={(field) => (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor={field.name} className="text-right">
-                    Status
-                  </label>
-                  <Select
-                    value={field.state.value}
-                    name={field.name}
-                    onValueChange={(value) => field.handleChange(value as ValueOf<typeof BACKLOG_TASK_STATUS>)}>
-                    <SelectTrigger className="col-span-3">
-                      <SelectValue placeholder="Select a status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={BACKLOG_TASK_STATUS.NOT_COMPLETED}>Not completed</SelectItem>
-                      <SelectItem value={BACKLOG_TASK_STATUS.COMPLETED}>Completed</SelectItem>
-                      <SelectItem value={BACKLOG_TASK_STATUS.WONT_DO}>Wont do</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FieldInfo field={field} />
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor={field.name} className="text-right">
+                      Status
+                    </label>
+                    <Select
+                      value={field.state.value}
+                      name={field.name}
+                      onValueChange={(value) => field.handleChange(value as ValueOf<typeof BACKLOG_TASK_STATUS>)}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select a status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={BACKLOG_TASK_STATUS.NOT_COMPLETED}>Not completed</SelectItem>
+                        <SelectItem value={BACKLOG_TASK_STATUS.COMPLETED}>Completed</SelectItem>
+                        <SelectItem value={BACKLOG_TASK_STATUS.WONT_DO}>Wont do</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <FormFieldError field={field} />
                 </div>
               )}
             />
@@ -171,24 +166,26 @@ export function TaskModal() {
                 onSubmit: createBacklogTaskSchema.shape.priority,
               }}
               children={(field) => (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor={field.name} className="text-right">
-                    Priority
-                  </label>
-                  <Select
-                    value={field.state.value}
-                    name={field.name}
-                    onValueChange={(value) => field.handleChange(value as ValueOf<typeof BACKLOG_TASK_PRIORITY>)}>
-                    <SelectTrigger className="col-span-3">
-                      <SelectValue placeholder="Select priority" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value={BACKLOG_TASK_PRIORITY.LOW}>Low</SelectItem>
-                      <SelectItem value={BACKLOG_TASK_PRIORITY.MEDIUM}>Medium</SelectItem>
-                      <SelectItem value={BACKLOG_TASK_PRIORITY.HIGH}>High</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FieldInfo field={field} />
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor={field.name} className="text-right">
+                      Priority
+                    </label>
+                    <Select
+                      value={field.state.value}
+                      name={field.name}
+                      onValueChange={(value) => field.handleChange(value as ValueOf<typeof BACKLOG_TASK_PRIORITY>)}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={BACKLOG_TASK_PRIORITY.LOW}>Low</SelectItem>
+                        <SelectItem value={BACKLOG_TASK_PRIORITY.MEDIUM}>Medium</SelectItem>
+                        <SelectItem value={BACKLOG_TASK_PRIORITY.HIGH}>High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <FormFieldError field={field} />
                 </div>
               )}
             />
@@ -198,26 +195,28 @@ export function TaskModal() {
                 onSubmit: createBacklogTaskSchema.shape.groupId,
               }}
               children={(field) => (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor={field.name} className="text-right">
-                    Group
-                  </label>
-                  <Select
-                    value={field.state.value}
-                    name={field.name}
-                    onValueChange={(value) => field.handleChange(value)}>
-                    <SelectTrigger className="col-span-3">
-                      <SelectValue placeholder="Select a group" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {getGroupsOptions().map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FieldInfo field={field} />
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor={field.name} className="text-right">
+                      Group
+                    </label>
+                    <Select
+                      value={field.state.value}
+                      name={field.name}
+                      onValueChange={(value) => field.handleChange(value)}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="Select a group" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {getGroupsOptions().map((option) => (
+                          <SelectItem key={option.value} value={option.value}>
+                            {option.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <FormFieldError field={field} />
                 </div>
               )}
             />
@@ -227,31 +226,33 @@ export function TaskModal() {
                 onSubmit: createBacklogTaskSchema.shape.dueDate,
               }}
               children={(field) => (
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <label htmlFor={field.name} className="text-right">
-                    Deadline Date
-                  </label>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={'outline'}
-                        className={`col-span-3 justify-start text-left font-normal ${!field.state.value && 'text-muted-foreground'}`}>
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {field.state.value ? format(field.state.value, 'PPP') : <span>Pick a date</span>}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        id={field.name}
-                        mode="single"
-                        selected={field.state.value ? new Date(field.state.value) : new Date()}
-                        onDayBlur={field.handleBlur}
-                        onSelect={(date) => field.handleChange((date ?? new Date()).toISOString())}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FieldInfo field={field} />
+                <div className="flex flex-col gap-6">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <label htmlFor={field.name} className="text-right">
+                      Deadline Date
+                    </label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={'outline'}
+                          className={`col-span-3 justify-start text-left font-normal ${!field.state.value && 'text-muted-foreground'}`}>
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.state.value ? format(field.state.value, 'PPP') : <span>Pick a date</span>}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0">
+                        <Calendar
+                          id={field.name}
+                          mode="single"
+                          selected={field.state.value ? new Date(field.state.value) : new Date()}
+                          onDayBlur={field.handleBlur}
+                          onSelect={(date) => field.handleChange((date ?? new Date()).toISOString())}
+                          initialFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <FormFieldError field={field} />
                 </div>
               )}
             />
