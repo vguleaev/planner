@@ -1,7 +1,6 @@
 import { Hono } from 'hono';
 import { logger } from 'hono/logger';
 import { serveStatic } from 'hono/bun';
-import expensesRoute from './routes/expenses-route';
 import authRoute from './routes/auth-route';
 import backlogTasksRoute from './routes/backlog-tasks-route';
 import backlogRoute from './routes/backlog.route';
@@ -13,7 +12,6 @@ app.use('*', logger());
 
 export const apiRoutes = app
   .basePath('/api')
-  .route('/expenses', expensesRoute)
   .route('/backlog', backlogRoute)
   .route('/backlog-tasks', backlogTasksRoute)
   .route('/backlog-task-groups', backlogTaskGroupsRoute)

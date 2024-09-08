@@ -5,7 +5,7 @@ import { LoaderCircle } from 'lucide-react';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { useForm } from '@tanstack/react-form';
 import { createBacklogTaskGroupSchema } from '@server/validation/backlog-task-groups.schema';
-import { useCreateGroup, useUpdateGroup } from '@/hooks/expenses.hooks';
+import { useCreateGroup, useUpdateGroup } from '@/hooks/backlog-tasks.hooks';
 import { useGroupModalStore } from '@/stores/group-modal.store';
 
 export function GroupModal() {

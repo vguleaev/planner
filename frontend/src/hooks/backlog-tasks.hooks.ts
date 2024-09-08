@@ -1,22 +1,9 @@
 import { api } from '@/lib/api';
 import queryClient from '@/query-client/query-client';
-import { CreateExpense } from '@server/validation/expenses.schema';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useToast } from './use-toast';
 import { CreateBacklogTaskGroup, UpdateBacklogTaskGroup } from '@server/validation/backlog-task-groups.schema';
-
-const fetchExpenses = async () => {
-  const response = await api.expenses.$get();
-  return response.json();
-};
-
-export const useExpenses = () => {
-  return useQuery({
-    queryKey: ['expenses'],
-    queryFn: fetchExpenses,
-    staleTime: 1000 * 60 * 5,
-  });
-};
+import { CreateBacklogTask } from '@server/validation/backlog-tasks.schema';
 
 const fetchBacklog = async () => {
   const response = await api['backlog'].$get();
@@ -90,40 +77,41 @@ export const useUpdateGroup = () => {
   });
 };
 
-const createExpense = async ({ newExpense }: { newExpense: CreateExpense }) => {
-  const res = await api.expenses.$post({ json: newExpense });
+const createTask = async ({ newTask }: { newTask: CreateBacklogTask }) => {
+  const res = await api['backlog-tasks'].$post({ json: newTask });
   return res.json();
 };
 
-export const useCreateExpense = () => {
+export const useCreateTask = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: createExpense,
+    mutationFn: createTask,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
       toast({
         title: 'Success!',
-        description: 'You have successfully created a new expense.',
+        description: 'You have successfully created a new task.',
       });
     },
   });
 };
 
-const deleteExpense = async ({ id }: { id: number }) => {
-  await api.expenses[':id'].$delete({ param: { id: id.toString() } });
+const updateTask = async ({ id, updatedTask }: { id: string; updatedTask: CreateBacklogTask }) => {
+  const res = await api['backlog-tasks'][':id'].$put({ param: { id }, json: updatedTask });
+  return res.json();
 };
 
-export const useDeleteExpense = () => {
+export const useUpdateTask = () => {
   const { toast } = useToast();
 
   return useMutation({
-    mutationFn: deleteExpense,
+    mutationFn: updateTask,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['expenses'] });
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
       toast({
         title: 'Success!',
-        description: 'You have successfully deleted an expense.',
+        description: 'You have successfully updated a task.',
       });
     },
   });

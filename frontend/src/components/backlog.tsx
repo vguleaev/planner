@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
-import { useBacklog, useDeleteGroup } from '@/hooks/expenses.hooks';
+import { useBacklog, useDeleteGroup } from '@/hooks/backlog-tasks.hooks';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   CalendarIcon,
@@ -26,6 +26,8 @@ import { ConfirmDialog } from './confirm-dialog';
 import { BacklogTaskGroupWithTasks } from '@server/routes/backlog.route';
 import { useState } from 'react';
 import { useGroupModalStore } from '@/stores/group-modal.store';
+import { useTaskModalStore } from '@/stores/task-modal.store';
+import { BacklogTask } from '@server/db/schema';
 
 export function Backlog() {
   const { isPending, data: backlog } = useBacklog();
@@ -37,6 +39,11 @@ export function Backlog() {
     setSelectedGroup: state.setSelectedGroup,
   }));
 
+  const { setIsTaskModalOpen, setSelectedTask } = useTaskModalStore((state) => ({
+    setIsTaskModalOpen: state.setIsOpen,
+    setSelectedTask: state.setSelectedTask,
+  }));
+
   const onDelete = async (id: string) => {
     await deleteGroup({ id });
   };
@@ -44,6 +51,11 @@ export function Backlog() {
   const onEditGroupClick = (group: BacklogTaskGroupWithTasks) => {
     setSelectedGroup(group);
     setIsGroupModalOpen(true);
+  };
+
+  const onTaskTitleClick = (task: BacklogTask) => {
+    setSelectedTask(task);
+    setIsTaskModalOpen(true);
   };
 
   const renderSkeletons = () => {
@@ -69,7 +81,7 @@ export function Backlog() {
 
   const renderSingleNewGroupPlaceholder = (key: number) => {
     return (
-      <Card key={key} className="min-h-full bg-muted/20">
+      <Card key={key} className="min-h-full bg-muted/40 dark:bg-muted/20">
         <CardContent className="p-4">
           <div>
             <Button variant={'outline'} onClick={() => setIsGroupModalOpen(true)}>
@@ -127,7 +139,7 @@ export function Backlog() {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 min-h-[600px]">
       {backlog &&
         backlog.groups.map((group) => (
-          <Card key={group.name} className="min-h-full bg-muted/20">
+          <Card key={group.name} className="min-h-full bg-muted/40 dark:bg-muted/20">
             <CardHeader className="flex flex-row justify-between items-start">
               <CardTitle>{group.name}</CardTitle>
               {renderGroupOptionsDropdown(group)}
@@ -139,7 +151,11 @@ export function Backlog() {
                     <CardContent className="p-4">
                       <div className="grid grid-cols-[1fr,auto] gap-2">
                         <div className="space-y-2">
-                          <h3 className="font-semibold line-clamp-2">{task.title}</h3>
+                          <h3
+                            className="font-semibold line-clamp-2 hover:underline cursor-pointer"
+                            onClick={() => onTaskTitleClick(task)}>
+                            {task.title}
+                          </h3>
                           <div className="flex items-center space-x-2 text-sm text-gray-500">
                             <PriorityIcon priority={task.priority} />
                             <span>{startCase(toLower(task.priority))}</span>

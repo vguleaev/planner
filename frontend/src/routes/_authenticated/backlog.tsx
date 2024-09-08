@@ -1,25 +1,26 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
-import { useBacklog } from '@/hooks/expenses.hooks';
-import { TaskCreationModal } from '@/components/task-creation-modal';
+import { useBacklog } from '@/hooks/backlog-tasks.hooks';
+import { TaskModal } from '@/components/task-modal';
 import { Backlog } from '@/components/backlog';
+import { useTaskModalStore } from '@/stores/task-modal.store';
 
 export const Route = createFileRoute('/_authenticated/backlog')({
-  component: ExpensesPage,
+  component: BacklogPage,
 });
 
-function ExpensesPage() {
+function BacklogPage() {
   const { isPending, data: backlog } = useBacklog();
+
+  const { setIsTaskModalOpen } = useTaskModalStore((state) => ({
+    setIsTaskModalOpen: state.setIsOpen,
+  }));
 
   const renderAddTaskButton = () => {
     if (isPending || (backlog && backlog.groups.length === 0)) {
       return null;
     }
-    return (
-      <TaskCreationModal>
-        <Button>Create Task</Button>
-      </TaskCreationModal>
-    );
+    return <Button onClick={() => setIsTaskModalOpen(true)}>Create Task</Button>;
   };
 
   return (
@@ -30,6 +31,7 @@ function ExpensesPage() {
           {renderAddTaskButton()}
         </div>
         <Backlog />
+        <TaskModal />
       </div>
     </div>
   );

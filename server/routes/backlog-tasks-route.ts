@@ -4,7 +4,7 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import { db } from '../db/db';
 import { backlogTasksTable } from '../db/schema';
 import { desc, eq, and } from 'drizzle-orm';
-import { createBacklogTaskSchema } from '../validation/backlog-tasks.schema';
+import { createBacklogTaskSchema, updateBacklogTaskSchema } from '../validation/backlog-tasks.schema';
 
 const backlogTasksRoute = new Hono()
   .post('/', zValidator('json', createBacklogTaskSchema), authMiddleware, async (c) => {
@@ -19,6 +19,20 @@ const backlogTasksRoute = new Hono()
 
     const inserted = await db.insert(backlogTasksTable).values(newBacklogTask).returning();
     return c.json(inserted);
+  })
+  .put('/:id', zValidator('json', updateBacklogTaskSchema), authMiddleware, async (c) => {
+    const user = c.get('user');
+    const id = c.req.param('id');
+    const data = await c.req.valid('json');
+    const backlogTask = updateBacklogTaskSchema.parse(data);
+
+    const updated = await db
+      .update(backlogTasksTable)
+      .set(backlogTask)
+      .where(and(eq(backlogTasksTable.id, id), eq(backlogTasksTable.userId, user.id)))
+      .returning();
+
+    return c.json(updated);
   })
   .get('/', authMiddleware, async (ctx) => {
     const user = ctx.get('user');
@@ -53,13 +67,13 @@ const backlogTasksRoute = new Hono()
     const user = c.get('user');
     const id = c.req.param('id');
 
-    const expense = db
+    const task = db
       .select()
       .from(backlogTasksTable)
       .where(and(eq(backlogTasksTable.id, id), eq(backlogTasksTable.userId, user.id)))
       .limit(1);
 
-    if (!expense) {
+    if (!task) {
       return c.notFound();
     }
     const deleted = await db.delete(backlogTasksTable).where(eq(backlogTasksTable.id, id)).returning();

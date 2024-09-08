@@ -1,4 +1,4 @@
-import { CircleUser, Menu, Package2, Search } from 'lucide-react';
+import { CircleUser, Menu, Search } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import Logo from '@/assets/app-logo.svg?react';
 import { Input } from '@/components/ui/input';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useCurrentUser } from '@/hooks/user.hooks';
+import { ThemeToggle } from './theme-toggle';
 
 export function Navbar() {
   const { data } = useCurrentUser();
@@ -28,16 +29,10 @@ export function Navbar() {
         <Link to="/backlog" className="text-muted-foreground transition-colors hover:text-foreground">
           Backlog
         </Link>
-        <Link to="/expenses" className="text-muted-foreground transition-colors hover:text-foreground">
-          Expenses
-        </Link>
-        <Link to="/create-expense" className="text-muted-foreground transition-colors hover:text-foreground">
-          Create
-        </Link>
         <Link to="/about" className="text-muted-foreground transition-colors hover:text-foreground">
           About
         </Link>
-        <Link to="/profile" className="text-foreground transition-colors hover:text-foreground">
+        <Link to="/profile" className="text-muted-foreground transition-colors hover:text-foreground">
           Profile
         </Link>
       </nav>
@@ -51,23 +46,17 @@ export function Navbar() {
         <SheetContent side="left">
           <nav className="grid gap-6 text-lg font-medium">
             <Link href="#" className="flex items-center gap-2 text-lg font-semibold">
-              <Package2 className="h-6 w-6" />
-              <span className="sr-only">Acme Inc</span>
+              <Logo className="h-7 w-7 mr-2"></Logo>
+              Planner
             </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground">
-              Dashboard
+            <Link to="/backlog" className="text-muted-foreground hover:text-foreground">
+              Backlog
             </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground">
-              Orders
+            <Link to="/about" className="text-muted-foreground hover:text-foreground">
+              About
             </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground">
-              Products
-            </Link>
-            <Link href="#" className="text-muted-foreground hover:text-foreground">
-              Customers
-            </Link>
-            <Link href="#" className="hover:text-foreground">
-              Settings
+            <Link to="/profile" className="text-muted-foreground hover:text-foreground">
+              Profile
             </Link>
           </nav>
         </SheetContent>
@@ -83,6 +72,9 @@ export function Navbar() {
             />
           </div>
         </form>
+        <div>
+          <ThemeToggle />
+        </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="secondary" size="icon" className="rounded-full">

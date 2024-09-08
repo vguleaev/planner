@@ -1,26 +1,7 @@
 import type { InferSelectModel } from 'drizzle-orm';
-import { index, serial, numeric, pgTable, text, timestamp, timestamp, date, pgEnum, uuid } from 'drizzle-orm/pg-core';
+import { index, pgTable, text, timestamp, date, pgEnum, uuid } from 'drizzle-orm/pg-core';
 import { BACKLOG_TASK_STATUS } from '../constants/backlog-task-status.const';
 import { BACKLOG_TASK_PRIORITY } from '../constants/backlog-task-priority.const';
-
-export const expensesTable = pgTable(
-  'expenses',
-  {
-    id: serial('id').primaryKey(),
-    userId: text('user_id').notNull(),
-    title: text('title').notNull(),
-    amount: numeric('amount', { precision: 12, scale: 2 }).notNull(),
-    date: date('date').notNull(),
-    createdAt: timestamp('created_at').notNull().defaultNow(),
-  },
-  (table) => {
-    return {
-      userIndex: index('userId_idx').on(table.userId),
-    };
-  }
-);
-
-export type Expense = InferSelectModel<typeof expensesTable>;
 
 const statusEnum = pgEnum('status', [
   BACKLOG_TASK_STATUS.NOT_COMPLETED,

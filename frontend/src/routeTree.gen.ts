@@ -15,8 +15,6 @@ import { Route as AboutImport } from './routes/about'
 import { Route as AuthenticatedImport } from './routes/_authenticated'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthenticatedProfileImport } from './routes/_authenticated/profile'
-import { Route as AuthenticatedExpensesImport } from './routes/_authenticated/expenses'
-import { Route as AuthenticatedCreateExpenseImport } from './routes/_authenticated/create-expense'
 import { Route as AuthenticatedBacklogImport } from './routes/_authenticated/backlog'
 
 // Create/Update Routes
@@ -40,18 +38,6 @@ const AuthenticatedProfileRoute = AuthenticatedProfileImport.update({
   path: '/profile',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
-
-const AuthenticatedExpensesRoute = AuthenticatedExpensesImport.update({
-  path: '/expenses',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
-
-const AuthenticatedCreateExpenseRoute = AuthenticatedCreateExpenseImport.update(
-  {
-    path: '/create-expense',
-    getParentRoute: () => AuthenticatedRoute,
-  } as any,
-)
 
 const AuthenticatedBacklogRoute = AuthenticatedBacklogImport.update({
   path: '/backlog',
@@ -90,20 +76,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedBacklogImport
       parentRoute: typeof AuthenticatedImport
     }
-    '/_authenticated/create-expense': {
-      id: '/_authenticated/create-expense'
-      path: '/create-expense'
-      fullPath: '/create-expense'
-      preLoaderRoute: typeof AuthenticatedCreateExpenseImport
-      parentRoute: typeof AuthenticatedImport
-    }
-    '/_authenticated/expenses': {
-      id: '/_authenticated/expenses'
-      path: '/expenses'
-      fullPath: '/expenses'
-      preLoaderRoute: typeof AuthenticatedExpensesImport
-      parentRoute: typeof AuthenticatedImport
-    }
     '/_authenticated/profile': {
       id: '/_authenticated/profile'
       path: '/profile'
@@ -120,8 +92,6 @@ export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AuthenticatedRoute: AuthenticatedRoute.addChildren({
     AuthenticatedBacklogRoute,
-    AuthenticatedCreateExpenseRoute,
-    AuthenticatedExpensesRoute,
     AuthenticatedProfileRoute,
   }),
   AboutRoute,
@@ -147,8 +117,6 @@ export const routeTree = rootRoute.addChildren({
       "filePath": "_authenticated.tsx",
       "children": [
         "/_authenticated/backlog",
-        "/_authenticated/create-expense",
-        "/_authenticated/expenses",
         "/_authenticated/profile"
       ]
     },
@@ -157,14 +125,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/_authenticated/backlog": {
       "filePath": "_authenticated/backlog.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/create-expense": {
-      "filePath": "_authenticated/create-expense.tsx",
-      "parent": "/_authenticated"
-    },
-    "/_authenticated/expenses": {
-      "filePath": "_authenticated/expenses.tsx",
       "parent": "/_authenticated"
     },
     "/_authenticated/profile": {
