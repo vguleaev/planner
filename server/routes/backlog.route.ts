@@ -3,6 +3,7 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import { db } from '../db/db';
 import { backlogTaskGroupTable, backlogTasksTable, type BacklogTask, type BacklogTaskGroup } from '../db/schema';
 import { asc, desc, eq } from 'drizzle-orm';
+import { BACKLOG_TASK_PRIORITY } from '../constants/backlog-task-priority.const';
 
 export type GetBacklogResponse = {
   groups: BacklogTaskGroupWithTasks[];
@@ -10,6 +11,12 @@ export type GetBacklogResponse = {
 
 export type BacklogTaskGroupWithTasks = BacklogTaskGroup & {
   tasks: BacklogTask[];
+};
+
+const priorityMap = {
+  [BACKLOG_TASK_PRIORITY.HIGH]: 1,
+  [BACKLOG_TASK_PRIORITY.MEDIUM]: 2,
+  [BACKLOG_TASK_PRIORITY.LOW]: 3,
 };
 
 const backlogRoute = new Hono().get('/', authMiddleware, async (ctx) => {
@@ -27,10 +34,14 @@ const backlogRoute = new Hono().get('/', authMiddleware, async (ctx) => {
     .where(eq(backlogTasksTable.userId, user.id))
     .orderBy(desc(backlogTasksTable.createdAt));
 
+  const sortedTasks = tasks.sort((a, b) => {
+    return priorityMap[a.priority] - priorityMap[b.priority];
+  });
+
   const groupsWithTasks = groups.map((group) => {
     return {
       ...group,
-      tasks: tasks.filter((task) => task.groupId === group.id),
+      tasks: sortedTasks.filter((task) => task.groupId === group.id),
     };
   });
   return ctx.json<GetBacklogResponse>({
