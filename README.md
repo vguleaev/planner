@@ -1,4 +1,35 @@
+<img src="frontend/public/app-logo.svg" alt="Logo" width="100" height="100">
+
 # Planner
+
+**Planner** - Plan your daily, weekly and monthly tasks with ease.
+
+https://planner.vguleaev.dev/
+
+## TechStack:
+
+- React
+- Vite
+- shadcn
+- Tailwind
+- Typescript
+- Hono
+- Bun
+- Drizzle
+- Kinde auth
+- Tanstack Router
+- Tanstack Forms
+- Tanstack Query
+- Zustand
+- lucide-icons
+
+Self hosted on VM
+
+Infrastructure done with Ansible
+
+## Run
+
+This repo contains both backend server and frontend. Locally for development you start them separably, when deployed on production in one docker container where server simply serves complied React application in one html file.
 
 To install dependencies server:
 
@@ -12,11 +43,7 @@ To install dependencies frontend:
 cd frontend && bun install
 ```
 
-This project was created using `bun init` in bun v1.1.7. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
-
-## Run locally
-
-You need to run both frontend and backend separately.
+To start app you need to run both frontend and backend separately.
 
 Run backend:
 `bun run dev`
