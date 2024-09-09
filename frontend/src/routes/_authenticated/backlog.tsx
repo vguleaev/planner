@@ -7,20 +7,22 @@ import { useTaskModalStore } from '@/stores/task-modal.store';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BACKLOG_TASK_FILTER } from '@server/constants/backlog-task-filter.const';
 import { ValueOf } from 'ts-essentials';
-import { useState } from 'react';
+import { useFiltersStore } from '@/stores/filters.store';
 
 export const Route = createFileRoute('/_authenticated/backlog')({
   component: BacklogPage,
 });
 
 function BacklogPage() {
-  const [selectedFilter, setSelectedFilter] = useState<ValueOf<typeof BACKLOG_TASK_FILTER>>(
-    BACKLOG_TASK_FILTER.NOT_COMPLETED
-  );
   const { isPending, data: backlog } = useBacklog();
 
   const { setIsTaskModalOpen } = useTaskModalStore((state) => ({
     setIsTaskModalOpen: state.setIsOpen,
+  }));
+
+  const { selectedStatusFilter, setSelectedStatusFilter } = useFiltersStore((state) => ({
+    selectedStatusFilter: state.selectedStatusFilter,
+    setSelectedStatusFilter: state.setSelectedStatusFilter,
   }));
 
   const renderToolbar = () => {
@@ -30,8 +32,8 @@ function BacklogPage() {
     return (
       <div className="flex flex-col md:flex-row gap-6">
         <Tabs
-          value={selectedFilter}
-          onValueChange={(value) => setSelectedFilter(value as ValueOf<typeof BACKLOG_TASK_FILTER>)}
+          value={selectedStatusFilter}
+          onValueChange={(value) => setSelectedStatusFilter(value as ValueOf<typeof BACKLOG_TASK_FILTER>)}
           className="">
           <TabsList>
             <TabsTrigger value={BACKLOG_TASK_FILTER.NOT_COMPLETED}>Not completed</TabsTrigger>

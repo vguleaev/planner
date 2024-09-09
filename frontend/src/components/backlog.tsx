@@ -28,11 +28,17 @@ import { useState } from 'react';
 import { useGroupModalStore } from '@/stores/group-modal.store';
 import { useTaskModalStore } from '@/stores/task-modal.store';
 import { BacklogTask } from '@server/db/schema';
+import { useFiltersStore } from '@/stores/filters.store';
+import { BACKLOG_TASK_FILTER } from '@server/constants/backlog-task-filter.const';
 
 export function Backlog() {
   const { isPending, data: backlog } = useBacklog();
   const { mutateAsync: deleteGroup } = useDeleteGroup();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const { selectedStatusFilter } = useFiltersStore((state) => ({
+    selectedStatusFilter: state.selectedStatusFilter,
+  }));
 
   const { setIsGroupModalOpen, setSelectedGroup } = useGroupModalStore((state) => ({
     setIsGroupModalOpen: state.setIsOpen,
@@ -56,6 +62,17 @@ export function Backlog() {
   const onTaskTitleClick = (task: BacklogTask) => {
     setSelectedTask(task);
     setIsTaskModalOpen(true);
+  };
+
+  const getFilteredTasks = (group: BacklogTaskGroupWithTasks) => {
+    switch (selectedStatusFilter) {
+      case BACKLOG_TASK_FILTER.NOT_COMPLETED:
+        return group.tasks.filter((task) => task.status === BACKLOG_TASK_STATUS.NOT_COMPLETED);
+      case BACKLOG_TASK_FILTER.COMPLETED:
+        return group.tasks.filter((task) => task.status === BACKLOG_TASK_STATUS.COMPLETED);
+      case BACKLOG_TASK_FILTER.ALL:
+        return group.tasks;
+    }
   };
 
   const renderSkeletons = () => {
@@ -146,7 +163,7 @@ export function Backlog() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {group.tasks.map((task) => (
+                {getFilteredTasks(group).map((task) => (
                   <Card key={task.id} className="overflow-hidden">
                     <CardContent className="p-4">
                       <div className="grid grid-cols-[1fr,auto] gap-2">
