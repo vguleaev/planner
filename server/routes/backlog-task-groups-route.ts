@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
 import { db } from '../db/db';
-import { backlogTaskGroupTable } from '../db/schema';
+import { backlogTaskGroupTable, backlogTasksTable } from '../db/schema';
 import { desc, eq, and, count } from 'drizzle-orm';
 import { createBacklogTaskGroupSchema, updateBacklogTaskGroupSchema } from '../validation/backlog-task-groups.schema';
 
@@ -71,6 +71,11 @@ const backlogTaskGroupsRoute = new Hono()
   .delete('/:id', authMiddleware, async (c) => {
     const user = c.get('user');
     const id = c.req.param('id');
+
+    await db
+      .select()
+      .from(backlogTasksTable)
+      .where(and(eq(backlogTasksTable.groupId, id), eq(backlogTasksTable.userId, user.id)));
 
     const group = db
       .select()
