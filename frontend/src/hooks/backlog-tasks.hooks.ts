@@ -33,7 +33,6 @@ export const useDeleteGroup = () => {
   return useMutation({
     mutationFn: deleteGroup,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['backlog'] });
       toast({
         title: 'Success!',
         description: 'You have successfully deleted a group.',
@@ -45,6 +44,9 @@ export const useDeleteGroup = () => {
         description: `Failed to delete the group`,
         variant: 'destructive',
       });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
     },
   });
 };
@@ -60,7 +62,6 @@ export const useCreateGroup = () => {
   return useMutation({
     mutationFn: createGroup,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['backlog'] });
       toast({
         title: 'Success!',
         description: 'You have successfully created a new group.',
@@ -72,6 +73,9 @@ export const useCreateGroup = () => {
         description: `Failed to create the group`,
         variant: 'destructive',
       });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
     },
   });
 };
@@ -87,7 +91,6 @@ export const useUpdateGroup = () => {
   return useMutation({
     mutationFn: updateGroup,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['backlog'] });
       toast({
         title: 'Success!',
         description: 'You have successfully updated a group.',
@@ -99,6 +102,9 @@ export const useUpdateGroup = () => {
         description: `Failed to update the group`,
         variant: 'destructive',
       });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
     },
   });
 };
@@ -114,7 +120,6 @@ export const useCreateTask = () => {
   return useMutation({
     mutationFn: createTask,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['backlog'] });
       toast({
         title: 'Success!',
         description: 'You have successfully created a new task.',
@@ -126,6 +131,9 @@ export const useCreateTask = () => {
         description: `Failed to create the task`,
         variant: 'destructive',
       });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
     },
   });
 };
@@ -141,7 +149,6 @@ export const useUpdateTask = () => {
   return useMutation({
     mutationFn: updateTask,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['backlog'] });
       toast({
         title: 'Success!',
         description: 'You have successfully updated a task.',
@@ -153,6 +160,9 @@ export const useUpdateTask = () => {
         description: `Failed to update the task`,
         variant: 'destructive',
       });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
     },
   });
 };

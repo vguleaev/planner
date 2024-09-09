@@ -73,9 +73,9 @@ const backlogTaskGroupsRoute = new Hono()
     const id = c.req.param('id');
 
     await db
-      .select()
-      .from(backlogTasksTable)
-      .where(and(eq(backlogTasksTable.groupId, id), eq(backlogTasksTable.userId, user.id)));
+      .delete(backlogTasksTable)
+      .where(and(eq(backlogTasksTable.groupId, id), eq(backlogTasksTable.userId, user.id)))
+      .returning();
 
     const group = db
       .select()
