@@ -9,6 +9,7 @@ import {
   AlertCircleIcon,
   AlertTriangleIcon,
   MoreVertical,
+  XCircleIcon,
 } from 'lucide-react';
 import { BACKLOG_TASK_PRIORITY } from '@server/constants/backlog-task-priority.const';
 import { ValueOf } from 'ts-essentials';
@@ -96,6 +97,17 @@ export function Backlog() {
     }
   };
 
+  const StatusIcon = ({ status }: { status: ValueOf<typeof BACKLOG_TASK_STATUS> }) => {
+    switch (status) {
+      case BACKLOG_TASK_STATUS.NOT_COMPLETED:
+        return <CircleIcon className="w-5 h-5 text-gray-300" />;
+      case BACKLOG_TASK_STATUS.COMPLETED:
+        return <CheckCircle2Icon className="w-5 h-5 text-green-500" />;
+      case BACKLOG_TASK_STATUS.WONT_DO:
+        return <XCircleIcon className="w-5 h-5 text-red-500" />;
+    }
+  };
+
   const renderSingleNewGroupPlaceholder = (key: number) => {
     return (
       <Card key={key} className="min-h-full bg-muted/40 dark:bg-muted/20">
@@ -179,11 +191,7 @@ export function Backlog() {
                           </div>
                         </div>
                         <div className="flex justify-end">
-                          {task.status === BACKLOG_TASK_STATUS.COMPLETED ? (
-                            <CheckCircle2Icon className="w-5 h-5 text-green-500" />
-                          ) : (
-                            <CircleIcon className="w-5 h-5 text-gray-300" />
-                          )}
+                          <StatusIcon status={task.status} />
                         </div>
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-gray-500 mt-2">
