@@ -10,6 +10,7 @@ import {
   AlertTriangleIcon,
   MoreVertical,
   XCircleIcon,
+  CalendarClockIcon,
 } from 'lucide-react';
 import { BACKLOG_TASK_PRIORITY } from '@server/constants/backlog-task-priority.const';
 import { ValueOf } from 'ts-essentials';
@@ -31,6 +32,7 @@ import { useTaskModalStore } from '@/stores/task-modal.store';
 import { BacklogTask } from '@server/db/schema';
 import { useFiltersStore } from '@/stores/filters.store';
 import { BACKLOG_TASK_FILTER } from '@server/constants/backlog-task-filter.const';
+import { cn } from '@/lib/utils';
 
 export function Backlog() {
   const { isPending, data: backlog } = useBacklog();
@@ -106,6 +108,33 @@ export function Backlog() {
       case BACKLOG_TASK_STATUS.WONT_DO:
         return <XCircleIcon className="w-5 h-5 text-red-500" />;
     }
+  };
+
+  const DeadlineDateIcon = ({
+    deadline,
+    status,
+  }: {
+    deadline: string | null;
+    status: ValueOf<typeof BACKLOG_TASK_STATUS>;
+  }) => {
+    if (!deadline) {
+      return null;
+    }
+    const isPastDeadline = dayjs(deadline).isBefore(dayjs()) && status !== BACKLOG_TASK_STATUS.COMPLETED;
+    const isDeadlineSoon = dayjs(deadline).isBefore(dayjs().add(3, 'days')) && status !== BACKLOG_TASK_STATUS.COMPLETED;
+    return (
+      <div className="flex items-center space-x-2 text-sm text-gray-500 mt-2">
+        <CalendarClockIcon className="w-4 h-4" />
+        <span className="font-bold mr-2">Deadline:</span>
+        <span
+          className={cn('font-bold', {
+            'text-red-500': isPastDeadline,
+            'text-orange-500': isDeadlineSoon && !isPastDeadline,
+          })}>
+          {dayjs(deadline).format('MMMM D, YYYY')}
+        </span>
+      </div>
+    );
   };
 
   const renderSingleNewGroupPlaceholder = (key: number) => {
@@ -193,6 +222,9 @@ export function Backlog() {
                         <div className="flex justify-end">
                           <StatusIcon status={task.status} />
                         </div>
+                      </div>
+                      <div>
+                        <DeadlineDateIcon deadline={task.dueDate} status={task.status} />
                       </div>
                       <div className="flex items-center space-x-2 text-sm text-gray-500 mt-2">
                         <CalendarIcon className="w-4 h-4" />
