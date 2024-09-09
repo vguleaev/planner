@@ -23,7 +23,8 @@ export const useBacklog = () => {
 };
 
 const deleteGroup = async ({ id }: { id: string }) => {
-  return api['backlog-task-groups'][':id'].$delete({ param: { id } });
+  const response = await api['backlog-task-groups'][':id'].$delete({ param: { id } });
+  return response.json();
 };
 
 export const useDeleteGroup = () => {
@@ -38,12 +39,19 @@ export const useDeleteGroup = () => {
         description: 'You have successfully deleted a group.',
       });
     },
+    onError: () => {
+      toast({
+        title: 'Error!',
+        description: `Failed to delete the group`,
+        variant: 'destructive',
+      });
+    },
   });
 };
 
 const createGroup = async ({ newGroup }: { newGroup: CreateBacklogTaskGroup }) => {
-  const res = await api['backlog-task-groups'].$post({ json: newGroup });
-  return res.json();
+  const response = await api['backlog-task-groups'].$post({ json: newGroup });
+  return response.json();
 };
 
 export const useCreateGroup = () => {
@@ -58,12 +66,19 @@ export const useCreateGroup = () => {
         description: 'You have successfully created a new group.',
       });
     },
+    onError: () => {
+      toast({
+        title: 'Error!',
+        description: `Failed to create the group`,
+        variant: 'destructive',
+      });
+    },
   });
 };
 
 const updateGroup = async ({ id, updatedGroup }: { id: string; updatedGroup: UpdateBacklogTaskGroup }) => {
-  const res = await api['backlog-task-groups'][':id'].$put({ param: { id }, json: updatedGroup });
-  return res.json();
+  const response = await api['backlog-task-groups'][':id'].$put({ param: { id }, json: updatedGroup });
+  return response.json();
 };
 
 export const useUpdateGroup = () => {
@@ -78,12 +93,19 @@ export const useUpdateGroup = () => {
         description: 'You have successfully updated a group.',
       });
     },
+    onError: () => {
+      toast({
+        title: 'Error!',
+        description: `Failed to update the group`,
+        variant: 'destructive',
+      });
+    },
   });
 };
 
 const createTask = async ({ newTask }: { newTask: CreateBacklogTask }) => {
-  const res = await api['backlog-tasks'].$post({ json: newTask });
-  return res.json();
+  const response = await api['backlog-tasks'].$post({ json: newTask });
+  return response.json();
 };
 
 export const useCreateTask = () => {
@@ -98,12 +120,19 @@ export const useCreateTask = () => {
         description: 'You have successfully created a new task.',
       });
     },
+    onError: () => {
+      toast({
+        title: 'Error!',
+        description: `Failed to create the task`,
+        variant: 'destructive',
+      });
+    },
   });
 };
 
 const updateTask = async ({ id, updatedTask }: { id: string; updatedTask: CreateBacklogTask }) => {
-  const res = await api['backlog-tasks'][':id'].$put({ param: { id }, json: updatedTask });
-  return res.json();
+  const response = await api['backlog-tasks'][':id'].$put({ param: { id }, json: updatedTask });
+  return response.json();
 };
 
 export const useUpdateTask = () => {
@@ -116,6 +145,13 @@ export const useUpdateTask = () => {
       toast({
         title: 'Success!',
         description: 'You have successfully updated a task.',
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error!',
+        description: `Failed to update the task`,
+        variant: 'destructive',
       });
     },
   });
