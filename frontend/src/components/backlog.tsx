@@ -7,7 +7,6 @@ import {
   CheckCircle2Icon,
   CircleIcon,
   AlertCircleIcon,
-  AlertTriangleIcon,
   MoreVertical,
   XCircleIcon,
   CalendarClockIcon,
@@ -93,7 +92,7 @@ export function Backlog() {
       case BACKLOG_TASK_PRIORITY.LOW:
         return <AlertCircleIcon className="w-4 h-4 text-blue-500" />;
       case BACKLOG_TASK_PRIORITY.MEDIUM:
-        return <AlertTriangleIcon className="w-4 h-4 text-yellow-500" />;
+        return <AlertCircleIcon className="w-4 h-4 text-yellow-500" />;
       case BACKLOG_TASK_PRIORITY.HIGH:
         return <AlertCircleIcon className="w-4 h-4 text-red-500" />;
     }
