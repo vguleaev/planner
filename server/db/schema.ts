@@ -27,7 +27,7 @@ export const backlogTasksTable = pgTable(
       .references(() => backlogTaskGroupTable.id),
     priority: priorityEnum('priority').notNull().default('MEDIUM'),
     dueDate: timestamp('due_date', { precision: 6, withTimezone: true, mode: 'string' }),
-    createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
+    createdAt: timestamp('created_at', { precision: 6, withTimezone: true, mode: 'string' }).notNull().defaultNow(),
   },
   (table) => {
     return {

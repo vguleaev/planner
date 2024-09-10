@@ -71,6 +71,13 @@
       "when": 1725952357522,
       "tag": "0009_left_jamie_braddock",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1725953771612,
+      "tag": "0010_cold_lilandra",
+      "breakpoints": true
     }
   ]
 }
