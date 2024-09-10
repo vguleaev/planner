@@ -232,7 +232,7 @@ export function Backlog() {
                     </CardContent>
                   </Card>
                 ))}
-                {group.tasks.length === 0 && <p className="text-gray-500">No tasks in backlog</p>}
+                {getFilteredTasks(group).length === 0 && <p className="text-gray-500">No tasks in backlog</p>}
               </div>
             </CardContent>
           </Card>
