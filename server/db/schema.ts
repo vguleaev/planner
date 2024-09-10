@@ -1,5 +1,5 @@
 import type { InferSelectModel } from 'drizzle-orm';
-import { index, pgTable, text, timestamp, date, pgEnum, uuid } from 'drizzle-orm/pg-core';
+import { index, pgTable, text, timestamp, pgEnum, uuid } from 'drizzle-orm/pg-core';
 import { BACKLOG_TASK_STATUS } from '../constants/backlog-task-status.const';
 import { BACKLOG_TASK_PRIORITY } from '../constants/backlog-task-priority.const';
 
@@ -26,7 +26,7 @@ export const backlogTasksTable = pgTable(
       .notNull()
       .references(() => backlogTaskGroupTable.id),
     priority: priorityEnum('priority').notNull().default('MEDIUM'),
-    dueDate: date('due_date'),
+    dueDate: timestamp('due_date', { precision: 6, withTimezone: true, mode: 'string' }),
     createdAt: timestamp('created_at', { mode: 'string' }).notNull().defaultNow(),
   },
   (table) => {
