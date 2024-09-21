@@ -47,15 +47,13 @@ function BacklogPage() {
   };
 
   return (
-    <div className="pt-2 m-auto">
-      <div className="container mx-auto p-4">
-        <div className="flex flex-col md:flex-row justify-between pb-4">
-          <h1 className="text-2xl font-bold mb-4">Backlog</h1>
-          {renderToolbar()}
-        </div>
-        <Backlog />
-        <TaskModal />
+    <div className="pt-6">
+      <div className="flex flex-col md:flex-row justify-between pb-4">
+        <h1 className="text-2xl font-bold mb-4">Backlog</h1>
+        {renderToolbar()}
       </div>
+      <Backlog />
+      <TaskModal />
     </div>
   );
 }
