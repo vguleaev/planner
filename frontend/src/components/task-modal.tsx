@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, LoaderCircle } from 'lucide-react';
+import { CalendarIcon, LoaderCircle, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { useBacklog, useCreateTask, useUpdateTask } from '@/hooks/backlog-tasks.hooks';
 import { useForm } from '@tanstack/react-form';
@@ -34,7 +34,7 @@ export function TaskModal() {
     defaultValues: {
       title: selectedTask?.title || '',
       description: selectedTask?.description || '',
-      status: (selectedTask?.status || '') as ValueOf<typeof BACKLOG_TASK_STATUS>,
+      status: (selectedTask?.status || BACKLOG_TASK_STATUS.NOT_COMPLETED) as ValueOf<typeof BACKLOG_TASK_STATUS>,
       priority: (selectedTask?.priority || '') as ValueOf<typeof BACKLOG_TASK_PRIORITY>,
       dueDate: selectedTask?.dueDate || null,
       groupId: selectedTask?.groupId || '',
@@ -237,7 +237,24 @@ export function TaskModal() {
                           variant={'outline'}
                           className={`col-span-3 justify-start text-left font-normal ${!field.state.value && 'text-muted-foreground'}`}>
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {field.state.value ? format(field.state.value, 'PPP') : <span>Pick a date</span>}
+                          {field.state.value ? (
+                            <div className="relative w-full">
+                              <span>{format(field.state.value, 'PPP')}</span>
+                              <div className="absolute p-4 right-0 -mt-8 -mr-5">
+                                {field.state.value && (
+                                  <X
+                                    className="h-4 w-4 text-muted-foreground cursor-pointer"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      field.handleChange(null);
+                                    }}
+                                  />
+                                )}
+                              </div>
+                            </div>
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">

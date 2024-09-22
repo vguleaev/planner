@@ -76,14 +76,15 @@ export function Navbar() {
               <div>{data?.email}</div>
             </DropdownMenuLabel>
             <DropdownMenuItem>
-              <Link to="/profile" className="text-foreground transition-colors hover:text-foreground">
+              <Link to="/profile" className="w-full text-foreground transition-colors hover:text-foreground">
                 Profile
               </Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
-              {' '}
-              <a href="/api/logout">Logout</a>
+              <a href="/api/logout" className="w-full">
+                Logout
+              </a>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
