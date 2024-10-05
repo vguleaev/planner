@@ -8,6 +8,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { BACKLOG_TASK_FILTER } from '@server/constants/backlog-task-filter.const';
 import { ValueOf } from 'ts-essentials';
 import { useFiltersStore } from '@/stores/filters.store';
+import { GroupModal } from '@/components/group-modal';
 
 export const Route = createFileRoute('/_authenticated/backlog')({
   component: BacklogPage,
@@ -53,6 +54,7 @@ function BacklogPage() {
         {renderToolbar()}
       </div>
       <Backlog />
+      <GroupModal />
       <TaskModal />
     </div>
   );

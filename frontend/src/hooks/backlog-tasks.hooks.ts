@@ -195,3 +195,32 @@ export const useDeleteTask = () => {
     },
   });
 };
+
+const toggleTask = async ({ id }: { id: string }) => {
+  const response = await api['backlog-tasks'][':id']['toggle'].$post({ param: { id } });
+  return response.json();
+};
+
+export const useToggleTask = () => {
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: toggleTask,
+    onSuccess: () => {
+      toast({
+        title: 'Success!',
+        description: 'You have successfully changed task.',
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error!',
+        description: `Failed to toggle task status`,
+        variant: 'destructive',
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
+    },
+  });
+};

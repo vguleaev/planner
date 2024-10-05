@@ -5,8 +5,36 @@ import { db } from '../db/db';
 import { backlogTasksTable } from '../db/schema';
 import { desc, eq, and } from 'drizzle-orm';
 import { createBacklogTaskSchema, updateBacklogTaskSchema } from '../validation/backlog-tasks.schema';
+import { BACKLOG_TASK_STATUS } from '../constants/backlog-task-status.const';
 
 const backlogTasksRoute = new Hono()
+  .post('/:id/toggle', authMiddleware, async (c) => {
+    const user = c.get('user');
+    const id = c.req.param('id');
+
+    const task = await db
+      .select()
+      .from(backlogTasksTable)
+      .where(and(eq(backlogTasksTable.id, id), eq(backlogTasksTable.userId, user.id)))
+      .limit(1);
+
+    if (!task.length) {
+      return c.notFound();
+    }
+
+    const newStatus =
+      task[0].status === BACKLOG_TASK_STATUS.COMPLETED
+        ? BACKLOG_TASK_STATUS.NOT_COMPLETED
+        : BACKLOG_TASK_STATUS.COMPLETED;
+
+    const updated = await db
+      .update(backlogTasksTable)
+      .set({ status: newStatus })
+      .where(and(eq(backlogTasksTable.id, id), eq(backlogTasksTable.userId, user.id)))
+      .returning();
+
+    return c.json(updated);
+  })
   .post('/', zValidator('json', createBacklogTaskSchema), authMiddleware, async (c) => {
     const user = c.get('user');
     const data = await c.req.valid('json');
