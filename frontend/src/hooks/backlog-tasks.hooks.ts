@@ -166,3 +166,32 @@ export const useUpdateTask = () => {
     },
   });
 };
+
+const deleteTask = async ({ id }: { id: string }) => {
+  const response = await api['backlog-tasks'][':id'].$delete({ param: { id } });
+  return response.json();
+};
+
+export const useDeleteTask = () => {
+  const { toast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteTask,
+    onSuccess: () => {
+      toast({
+        title: 'Success!',
+        description: 'You have successfully deleted a task.',
+      });
+    },
+    onError: () => {
+      toast({
+        title: 'Error!',
+        description: `Failed to delete the task`,
+        variant: 'destructive',
+      });
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['backlog'] });
+    },
+  });
+};

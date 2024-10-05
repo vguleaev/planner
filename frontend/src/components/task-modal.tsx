@@ -7,7 +7,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CalendarIcon, LoaderCircle, X } from 'lucide-react';
 import { format } from 'date-fns';
-import { useBacklog, useCreateTask, useUpdateTask } from '@/hooks/backlog-tasks.hooks';
+import { useBacklog, useCreateTask, useDeleteTask, useUpdateTask } from '@/hooks/backlog-tasks.hooks';
 import { useForm } from '@tanstack/react-form';
 import { zodValidator } from '@tanstack/zod-form-adapter';
 import { useTaskModalStore } from '@/stores/task-modal.store';
@@ -16,11 +16,15 @@ import { BACKLOG_TASK_STATUS } from '@server/constants/backlog-task-status.const
 import { BACKLOG_TASK_PRIORITY } from '@server/constants/backlog-task-priority.const';
 import { ValueOf } from 'ts-essentials';
 import { FormFieldError } from './form-field-error';
+import { SyntheticEvent, useState } from 'react';
+import { ConfirmDialog } from './confirm-dialog';
 
 export function TaskModal() {
   const { mutateAsync: createTask } = useCreateTask();
   const { mutateAsync: updateTask } = useUpdateTask();
+  const { mutateAsync: onDeleteTask } = useDeleteTask();
   const { data } = useBacklog();
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { isOpen, setIsOpen, selectedTask, setSelectedTask } = useTaskModalStore((state) => ({
     isOpen: state.isOpen,
@@ -62,12 +66,23 @@ export function TaskModal() {
     setIsOpen(open);
   };
 
+  const onDelete = async (id: string) => {
+    await onDeleteTask({ id });
+    setIsDeleteModalOpen(false);
+    setIsOpen(false);
+  };
+
   const getTitle = () => {
     return selectedTask ? 'Edit Task' : 'Create Task';
   };
 
   const getGroupsOptions = () => {
     return data?.groups.map((group) => ({ label: group.name, value: group.id })) || [];
+  };
+
+  const onDeleteTaskClick = (e: SyntheticEvent) => {
+    e.preventDefault();
+    setIsDeleteModalOpen(true);
   };
 
   return (
@@ -274,20 +289,34 @@ export function TaskModal() {
               )}
             />
           </div>
-          <div className="flex flex-row w-full justify-end gap-4">
-            <Button type="button" variant="secondary" onClick={() => onOpenChange(false)}>
-              Close
-            </Button>
-            <form.Subscribe
-              selector={(state) => [state.canSubmit, state.isSubmitting]}
-              children={([canSubmit, isSubmitting]) => (
-                <Button type="submit" disabled={!canSubmit}>
-                  {isSubmitting && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
-                  Save
+          <div className="flex flex-row w-full justify-between">
+            <div>
+              {selectedTask && (
+                <Button variant="destructive" onClick={onDeleteTaskClick}>
+                  Delete
                 </Button>
               )}
-            />
+            </div>
+            <div className="flex flex-row gap-4">
+              <Button type="button" variant="secondary" onClick={() => onOpenChange(false)}>
+                Close
+              </Button>
+              <form.Subscribe
+                selector={(state) => [state.canSubmit, state.isSubmitting]}
+                children={([canSubmit, isSubmitting]) => (
+                  <Button type="submit" disabled={!canSubmit}>
+                    {isSubmitting && <LoaderCircle className="mr-2 h-4 w-4 animate-spin" />}
+                    Save
+                  </Button>
+                )}
+              />
+            </div>
           </div>
+          <ConfirmDialog
+            open={isDeleteModalOpen}
+            onOpenChange={(value) => setIsDeleteModalOpen(value)}
+            onConfirm={() => onDelete(selectedTask!.id)}
+          />
         </form>
       </DialogContent>
     </Dialog>
