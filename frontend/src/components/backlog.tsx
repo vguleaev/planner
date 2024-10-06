@@ -15,7 +15,7 @@ import { BacklogTaskGroupWithTasks } from '@server/routes/backlog.route';
 import { useState } from 'react';
 import { useGroupModalStore } from '@/stores/group-modal.store';
 import { useFiltersStore } from '@/stores/filters.store';
-import { BACKLOG_TASK_FILTER } from '@server/constants/backlog-task-filter.const';
+import { BACKLOG_TASK_STATUS_FILTER } from '@server/constants/backlog-task-status-filter.const';
 import { BacklogTaskCard } from './backlog-task-card';
 
 export function Backlog() {
@@ -43,11 +43,11 @@ export function Backlog() {
 
   const getFilteredTasks = (group: BacklogTaskGroupWithTasks) => {
     switch (selectedStatusFilter) {
-      case BACKLOG_TASK_FILTER.NOT_COMPLETED:
+      case BACKLOG_TASK_STATUS_FILTER.NOT_COMPLETED:
         return group.tasks.filter((task) => task.status === BACKLOG_TASK_STATUS.NOT_COMPLETED);
-      case BACKLOG_TASK_FILTER.COMPLETED:
+      case BACKLOG_TASK_STATUS_FILTER.COMPLETED:
         return group.tasks.filter((task) => task.status === BACKLOG_TASK_STATUS.COMPLETED);
-      case BACKLOG_TASK_FILTER.ALL:
+      case BACKLOG_TASK_STATUS_FILTER.ALL:
         return group.tasks;
     }
   };

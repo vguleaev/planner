@@ -4,21 +4,28 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import { useToast } from './use-toast';
 import { CreateBacklogTaskGroup, UpdateBacklogTaskGroup } from '@server/validation/backlog-task-groups.schema';
 import { CreateBacklogTask } from '@server/validation/backlog-tasks.schema';
+import { BACKLOG_TASK_CREATED_FILTER } from '@server/constants/backlog-task-created-filter';
+import { ValueOf } from 'ts-essentials';
+import { useFiltersStore } from '@/stores/filters.store';
 
-const fetchBacklog = async () => {
+const fetchBacklog = async (createdFilter: ValueOf<typeof BACKLOG_TASK_CREATED_FILTER>) => {
   const response = await api['backlog'].$get({
     query: {
-      filter: 'all',
+      created: createdFilter,
     },
   });
   return response.json();
 };
 
 export const useBacklog = () => {
+  const { selectedCreatedFilter } = useFiltersStore((state) => ({
+    selectedCreatedFilter: state.selectedCreatedFilter,
+  }));
+
   return useQuery({
     queryKey: ['backlog'],
-    queryFn: () => fetchBacklog(),
-    staleTime: 1000 * 60 * 5,
+    queryFn: () => fetchBacklog(selectedCreatedFilter),
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
 
