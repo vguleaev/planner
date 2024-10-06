@@ -5,6 +5,7 @@
   "scripts": {
     "start": "bun server/index.ts",
     "dev": "bun --watch server/index.ts",
+    "test": "bun test",
     "lint": "eslint ./server ./frontend/src",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
