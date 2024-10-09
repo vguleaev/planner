@@ -43,7 +43,7 @@ describe('getBacklogTasks', () => {
   });
 
   it('should sort tasks by priority', async () => {
-    const mockGroups = [{ id: 'group1', userId: 'user1', createdAt: '2023-01-01T00:00:00Z' }];
+    const mockGroups = [{ id: 'group1', userId: 'user1', createdAt: '2023-01-01T00:00:00Z' }] as BacklogTaskGroup[];
     const mockTasks = [
       {
         id: 'task1',
@@ -59,7 +59,7 @@ describe('getBacklogTasks', () => {
         priority: BACKLOG_TASK_PRIORITY.HIGH,
         createdAt: '2023-01-01T00:00:00Z',
       },
-    ];
+    ] as BacklogTask[];
 
     mock.module('../repos/group.repo', () => ({
       getGroups: () => Promise.resolve(mockGroups),
@@ -70,7 +70,6 @@ describe('getBacklogTasks', () => {
     }));
 
     const result = await getBacklogTasks(user, createdFilter);
-    console.log('res', result);
     expect(result[0].tasks).toEqual([mockTasks[1], mockTasks[0]]);
   });
 });

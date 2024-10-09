@@ -31,7 +31,7 @@ jobs:
         run: bun run lint
 
       - name: Run tests
-        run: bun test
+        run: bun run test
 
       - name: Build Docker image
         run: docker build . -t docker.io/${{ env.DOCKER_USER }}/${{ env.APP_NAME }}:${{ github.sha }}

@@ -39,7 +39,7 @@ export function TaskModal() {
       title: selectedTask?.title || '',
       description: selectedTask?.description || '',
       status: (selectedTask?.status || BACKLOG_TASK_STATUS.NOT_COMPLETED) as ValueOf<typeof BACKLOG_TASK_STATUS>,
-      priority: (selectedTask?.priority || '') as ValueOf<typeof BACKLOG_TASK_PRIORITY>,
+      priority: (selectedTask?.priority || BACKLOG_TASK_PRIORITY.MEDIUM) as ValueOf<typeof BACKLOG_TASK_PRIORITY>,
       dueDate: selectedTask?.dueDate || null,
       groupId: selectedTask?.groupId || '',
     },

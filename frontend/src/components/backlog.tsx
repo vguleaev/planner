@@ -11,12 +11,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ConfirmDialog } from './confirm-dialog';
-import { BacklogTaskGroupWithTasks } from '@server/routes/backlog.route';
 import { useState } from 'react';
 import { useGroupModalStore } from '@/stores/group-modal.store';
 import { useFiltersStore } from '@/stores/filters.store';
 import { BACKLOG_TASK_STATUS_FILTER } from '@server/constants/backlog-task-status-filter.const';
 import { BacklogTaskCard } from './backlog-task-card';
+import { BacklogTaskGroupWithTasks } from '@server/services/backlog.service';
 
 export function Backlog() {
   const { isPending, data: backlog } = useBacklog();
