@@ -37,8 +37,10 @@ export function GroupModal() {
   });
 
   const clear = () => {
-    form.reset();
-    setSelectedGroup(null);
+    setTimeout(() => {
+      form.reset();
+      setSelectedGroup(null);
+    }, 300);
   };
 
   const onOpenChange = (open: boolean) => {
