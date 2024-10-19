@@ -12,7 +12,7 @@ RUN bun install --production
 # Install frontend dependencies
 COPY frontend/bun.lockb frontend/package.json ./frontend/
 
-RUN cd frontend && bun install --production
+RUN cd frontend && bun install
 
 # Copy the rest of the files
 COPY . .
