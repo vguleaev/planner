@@ -4,9 +4,6 @@ FROM oven/bun:1.1.12-slim
 # Set working directory in the container
 WORKDIR /app
 
-# Set environment variable to skip Husky prepare script
-ENV HUSKY=0
-
 # Install server dependencies
 COPY bun.lockb package.json ./
 

@@ -1,4 +1,4 @@
-import { BacklogTaskGroupWithTasks } from '@server/routes/backlog.route';
+import { BacklogTaskGroupWithTasks } from '@server/services/backlog.service';
 import { create } from 'zustand';
 
 type GroupModalStore = {
