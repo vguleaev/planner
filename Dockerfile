@@ -7,12 +7,12 @@ WORKDIR /app
 # Install server dependencies
 COPY bun.lockb package.json ./
 
-RUN bun install --ci
+RUN bun install --production
 
 # Install frontend dependencies
 COPY frontend/bun.lockb frontend/package.json ./frontend/
 
-RUN cd frontend && bun install --ci
+RUN cd frontend && bun install --production
 
 # Copy the rest of the files
 COPY . .
