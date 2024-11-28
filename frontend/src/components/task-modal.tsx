@@ -134,6 +134,7 @@ export function TaskModal() {
                       Description
                     </label>
                     <Textarea
+                      rows={4}
                       id={field.name}
                       value={field.state.value}
                       name={field.name}
