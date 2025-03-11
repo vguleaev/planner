@@ -25,7 +25,7 @@ https://planner.vguleaev.dev/
 
 Self hosted on VM
 
-Infrastructure done with Ansible
+Infrastructure done with **Ansible**
 
 ## Run
 
