@@ -129,12 +129,12 @@ export function TaskModal() {
               }}
               children={(field) => (
                 <div className="flex flex-col gap-6">
-                  <div className="grid grid-cols-4 items-center gap-4">
+                  <div className="grid grid-cols-4 gap-4">
                     <label htmlFor={field.name} className="text-right">
                       Description
                     </label>
                     <Textarea
-                      rows={4}
+                      rows={6}
                       id={field.name}
                       value={field.state.value}
                       name={field.name}
@@ -258,13 +258,13 @@ export function TaskModal() {
                               <span>{format(field.state.value, 'PPP')}</span>
                               <div className="absolute p-4 right-0 -mt-8 -mr-5">
                                 {field.state.value && (
-                                  <X
-                                    className="h-4 w-4 text-muted-foreground cursor-pointer"
+                                  <span
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       field.handleChange(null);
-                                    }}
-                                  />
+                                    }}>
+                                    <X className="h-4 w-4 text-muted-foreground cursor-pointer" />
+                                  </span>
                                 )}
                               </div>
                             </div>

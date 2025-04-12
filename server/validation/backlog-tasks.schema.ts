@@ -24,6 +24,6 @@ export const createBacklogTaskSchema = z.object({
 });
 
 export type CreateBacklogTask = z.infer<typeof createBacklogTaskSchema>;
+export type UpdateBacklogTask = CreateBacklogTask;
 
 export const updateBacklogTaskSchema = createBacklogTaskSchema;
-export type UpdateBacklogTask = CreateBacklogTask;
