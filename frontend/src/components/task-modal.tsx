@@ -101,6 +101,7 @@ export function TaskModal() {
             <form.Field
               name="title"
               validators={{
+                // @ts-expect-error - TanStack Form Zod compatibility issue
                 onSubmit: createBacklogTaskSchema.shape.title,
               }}
               children={(field) => (
@@ -125,6 +126,7 @@ export function TaskModal() {
             <form.Field
               name="description"
               validators={{
+                // @ts-expect-error - TanStack Form Zod compatibility issue
                 onSubmit: createBacklogTaskSchema.shape.description,
               }}
               children={(field) => (
@@ -150,6 +152,7 @@ export function TaskModal() {
             <form.Field
               name="status"
               validators={{
+                // @ts-expect-error - TanStack Form Zod compatibility issue
                 onSubmit: createBacklogTaskSchema.shape.status,
               }}
               children={(field) => (
@@ -179,6 +182,7 @@ export function TaskModal() {
             <form.Field
               name="priority"
               validators={{
+                // @ts-expect-error - TanStack Form Zod compatibility issue
                 onSubmit: createBacklogTaskSchema.shape.priority,
               }}
               children={(field) => (
@@ -208,6 +212,7 @@ export function TaskModal() {
             <form.Field
               name="groupId"
               validators={{
+                // @ts-expect-error - TanStack Form Zod compatibility issue
                 onSubmit: createBacklogTaskSchema.shape.groupId,
               }}
               children={(field) => (
@@ -239,6 +244,7 @@ export function TaskModal() {
             <form.Field
               name="dueDate"
               validators={{
+                // @ts-expect-error - TanStack Form Zod compatibility issue
                 onSubmit: createBacklogTaskSchema.shape.dueDate,
               }}
               children={(field) => (

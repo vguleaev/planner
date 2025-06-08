@@ -67,6 +67,7 @@ export function GroupModal() {
           <form.Field
             name="name"
             validators={{
+              // @ts-expect-error - TanStack Form Zod compatibility issue
               onSubmit: createBacklogTaskGroupSchema.shape.name,
             }}
             children={(field) => (
