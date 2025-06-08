@@ -29,6 +29,8 @@ function getCreatedDateFilter(createdFilter: ValueOf<typeof BACKLOG_TASK_CREATED
       return gte(backlogTasksTable.createdAt, dayjs().subtract(3, 'month').toISOString());
     case BACKLOG_TASK_CREATED_FILTER.LAST_6_MONTHS:
       return gte(backlogTasksTable.createdAt, dayjs().subtract(6, 'month').toISOString());
+    case BACKLOG_TASK_CREATED_FILTER.LAST_YEAR:
+      return gte(backlogTasksTable.createdAt, dayjs().subtract(1, 'year').toISOString());
     default:
       throw new Error('Invalid created filter');
   }

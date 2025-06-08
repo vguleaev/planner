@@ -59,6 +59,7 @@ function BacklogPage() {
               <SelectItem value={BACKLOG_TASK_CREATED_FILTER.LAST_MONTH}>Last Month</SelectItem>
               <SelectItem value={BACKLOG_TASK_CREATED_FILTER.LAST_3_MONTHS}>Last 3 Months</SelectItem>
               <SelectItem value={BACKLOG_TASK_CREATED_FILTER.LAST_6_MONTHS}>Last 6 Months</SelectItem>
+              <SelectItem value={BACKLOG_TASK_CREATED_FILTER.LAST_YEAR}>Last Year</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
