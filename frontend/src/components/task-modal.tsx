@@ -23,7 +23,7 @@ export function TaskModal() {
   const { mutateAsync: createTask } = useCreateTask();
   const { mutateAsync: updateTask } = useUpdateTask();
   const { mutateAsync: onDeleteTask } = useDeleteTask();
-  const { data } = useBacklog();
+  const { data: backlog } = useBacklog();
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { isOpen, setIsOpen, selectedTask, setSelectedTask } = useTaskModalStore((state) => ({
@@ -77,7 +77,7 @@ export function TaskModal() {
   };
 
   const getGroupsOptions = () => {
-    return data?.groups.map((group) => ({ label: group.name, value: group.id })) || [];
+    return backlog?.groups.map((group) => ({ label: group.name, value: group.id })) || [];
   };
 
   const onDeleteTaskClick = (e: SyntheticEvent) => {

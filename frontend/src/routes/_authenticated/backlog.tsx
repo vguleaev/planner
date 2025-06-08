@@ -12,14 +12,13 @@ import { GroupModal } from '@/components/group-modal';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from 'lucide-react';
 import { BACKLOG_TASK_CREATED_FILTER } from '@server/constants/backlog-task-created-filter';
+import { useEffect } from 'react';
 
 export const Route = createFileRoute('/_authenticated/backlog')({
   component: BacklogPage,
 });
 
 function BacklogPage() {
-  const { isPending, data: backlog, refetch } = useBacklog();
-
   const { setIsTaskModalOpen } = useTaskModalStore((state) => ({
     setIsTaskModalOpen: state.setIsOpen,
   }));
@@ -32,9 +31,14 @@ function BacklogPage() {
       setSelectedCreatedFilter: state.setSelectedCreatedFilter,
     }));
 
+  const { isPending, data: backlog, refetch } = useBacklog();
+
+  useEffect(() => {
+    refetch();
+  }, [selectedCreatedFilter]);
+
   const onCreatedFilterChange = (value: ValueOf<typeof BACKLOG_TASK_CREATED_FILTER>) => {
     setSelectedCreatedFilter(value);
-    setTimeout(() => refetch(), 0);
   };
 
   const renderToolbar = () => {
